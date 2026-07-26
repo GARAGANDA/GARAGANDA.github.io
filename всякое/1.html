@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Winrate по героям Dota 2</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #1a1a2e;
+            color: #e0e0e0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+        }
+        .container {
+            background: #16213e;
+            padding: 30px 40px;
+            border-radius: 16px;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.7);
+            width: 500px;
+            max-width: 100%;
+        }
+        h1 {
+            text-align: center;
+            margin-top: 0;
+            color: #e94560;
+            font-weight: 300;
+            letter-spacing: 1px;
+        }
+        .file-upload {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+        .file-upload label {
+            background: #0f3460;
+            padding: 10px 20px;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: 0.3s;
+            border: 1px solid #533483;
+            color: #fff;
+            font-size: 14px;
+        }
+        .file-upload label:hover {
+            background: #533483;
+        }
+        .file-upload input[type="file"] {
+            display: none;
+        }
+        .file-upload .filename {
+            margin-top: 8px;
+            font-size: 13px;
+            color: #aaa;
+        }
+        .select-group {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-bottom: 25px;
+        }
+        .select-group label {
+            display: flex;
+            flex-direction: column;
+            font-size: 14px;
+            color: #ccc;
+            flex: 1;
+            min-width: 140px;
+        }
+        .select-group select {
+            margin-top: 5px;
+            padding: 8px 12px;
+            border-radius: 8px;
+            border: 1px solid #533483;
+            background: #0f3460;
+            color: #fff;
+            font-size: 14px;
+            outline: none;
+            transition: 0.2s;
+        }
+        .select-group select:focus {
+            border-color: #e94560;
+        }
+        .select-group select option {
+            background: #16213e;
+        }
+        .result-box {
+            background: #0f3460;
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+            border: 1px solid #533483;
+        }
+        .result-box .stat {
+            display: flex;
+            justify-content: space-around;
+            margin: 10px 0;
+        }
+        .result-box .stat div {
+            display: flex;
+            flex-direction: column;
+        }
+        .result-box .stat .label {
+            font-size: 12px;
+            color: #aaa;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .result-box .stat .value {
+            font-size: 24px;
+            font-weight: 600;
+            margin-top: 4px;
+        }
+        .value.positive {
+            color: #4caf50;
+        }
+        .value.negative {
+            color: #f44336;
+        }
+        .value.neutral {
+            color: #ff9800;
+        }
+        .no-data {
+            color: #f44336;
+            font-size: 18px;
+            margin: 15px 0;
+        }
+        .games-info {
+            font-size: 14px;
+            color: #aaa;
+            margin-top: 8px;
+        }
+        .hint {
+            font-size: 13px;
+            color: #888;
+            text-align: center;
+            margin-bottom: 15px;
+        }
+        hr {
+            border: 0.5px solid #533483;
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>⚔️ Герои Dota 2</h1>
+
+    <div class="file-upload">
+        <label for="csvFile">📂 Загрузить CSV-файл</label>
+        <input type="file" id="csvFile" accept=".csv">
+        <div class="filename" id="fileName">Файл не выбран</div>
+    </div>
+
+    <div class="hint">Выберите героя и противника</div>
+
+    <div class="select-group">
+        <label>
+            Герой
+            <select id="heroSelect">
+                <option value="">—</option>
+            </select>
+        </label>
+        <label>
+            Противник
+            <select id="vsSelect">
+                <option value="">—</option>
+            </select>
+        </label>
+    </div>
+
+    <div class="result-box" id="resultBox">
+        <div class="stat" id="statWinrate">
+            <div>
+                <span class="label">Win Rate</span>
+                <span class="value neutral" id="winrateValue">—</span>
+            </div>
+            <div>
+                <span class="label">Elo Shift</span>
+                <span class="value neutral" id="eloValue">—</span>
+            </div>
+        </div>
+        <div class="games-info" id="gamesInfo">Игр: —</div>
+        <div id="noDataMessage" style="display:none;" class="no-data">❌ Данных для этой пары нет</div>
+    </div>
+</div>
+
+<script>
+    (function() {
+        // DOM-элементы
+        const fileInput = document.getElementById('csvFile');
+        const fileNameDisplay = document.getElementById('fileName');
+        const heroSelect = document.getElementById('heroSelect');
+        const vsSelect = document.getElementById('vsSelect');
+        const winrateValue = document.getElementById('winrateValue');
+        const eloValue = document.getElementById('eloValue');
+        const gamesInfo = document.getElementById('gamesInfo');
+        const noDataMessage = document.getElementById('noDataMessage');
+
+        let data = [];          // массив объектов с полями: Hero, Vs, Games, W, L, Win %, Elo Shift
+        let heroes = [];        // уникальные имена героев
+
+        // Парсер CSV с поддержкой кавычек
+        function parseCSV(text) {
+            const lines = text.split('\n').filter(line => line.trim() !== '');
+            if (lines.length === 0) return [];
+
+            // Заголовки
+            const headerLine = lines[0];
+            const headers = [];
+            let cell = '';
+            let inQuotes = false;
+            for (let i = 0; i < headerLine.length; i++) {
+                const ch = headerLine[i];
+                if (ch === '"') {
+                    if (inQuotes && headerLine[i+1] === '"') {
+                        cell += '"';
+                        i++;
+                    } else {
+                        inQuotes = !inQuotes;
+                    }
+                } else if (ch === ',' && !inQuotes) {
+                    headers.push(cell.trim());
+                    cell = '';
+                } else {
+                    cell += ch;
+                }
+            }
+            headers.push(cell.trim());
+            // Удаляем кавычки у заголовков
+            const cleanHeaders = headers.map(h => h.replace(/^"|"$/g, '').trim());
+
+            const result = [];
+            for (let r = 1; r < lines.length; r++) {
+                const line = lines[r];
+                const cells = [];
+                let c = '';
+                let inQ = false;
+                for (let i = 0; i < line.length; i++) {
+                    const ch = line[i];
+                    if (ch === '"') {
+                        if (inQ && line[i+1] === '"') {
+                            c += '"';
+                            i++;
+                        } else {
+                            inQ = !inQ;
+                        }
+                    } else if (ch === ',' && !inQ) {
+                        cells.push(c.trim());
+                        c = '';
+                    } else {
+                        c += ch;
+                    }
+                }
+                cells.push(c.trim());
+                // Если ячеек меньше, чем заголовков – пропускаем (возможно, пустая строка)
+                if (cells.length < cleanHeaders.length) continue;
+
+                const entry = {};
+                cleanHeaders.forEach((h, idx) => {
+                    let val = cells[idx] || '';
+                    val = val.replace(/^"|"$/g, '').trim();
+                    // Преобразуем числовые поля
+                    if (h === 'Games' || h === 'W' || h === 'L') {
+                        entry[h] = parseInt(val, 10) || 0;
+                    } else if (h === 'Win %' || h === 'Elo Shift') {
+                        entry[h] = parseFloat(val) || 0;
+                    } else {
+                        entry[h] = val;
+                    }
+                });
+                result.push(entry);
+            }
+            return result;
+        }
+
+        // Заполнение select'ов уникальными героями
+        function populateSelects(heroesList) {
+            // Очищаем
+            heroSelect.innerHTML = '<option value="">—</option>';
+            vsSelect.innerHTML = '<option value="">—</option>';
+
+            // Сортируем по алфавиту
+            const sorted = heroesList.slice().sort((a, b) => a.localeCompare(b));
+
+            sorted.forEach(name => {
+                const opt1 = document.createElement('option');
+                opt1.value = name;
+                opt1.textContent = name;
+                heroSelect.appendChild(opt1);
+
+                const opt2 = document.createElement('option');
+                opt2.value = name;
+                opt2.textContent = name;
+                vsSelect.appendChild(opt2);
+            });
+        }
+
+        // Обновление результата
+        function updateResult() {
+            const hero = heroSelect.value;
+            const vs = vsSelect.value;
+            const resultBox = document.getElementById('resultBox');
+
+            // Если не выбраны оба
+            if (!hero || !vs) {
+                winrateValue.textContent = '—';
+                winrateValue.className = 'value neutral';
+                eloValue.textContent = '—';
+                eloValue.className = 'value neutral';
+                gamesInfo.textContent = 'Игр: —';
+                noDataMessage.style.display = 'none';
+                return;
+            }
+
+            // Поиск в данных
+            const found = data.find(row => row.Hero === hero && row.Vs === vs);
+
+            if (found) {
+                const winRatePercent = (found['Win %'] * 100);
+                const elo = found['Elo Shift'];
+                const games = found['Games'];
+
+                winrateValue.textContent = winRatePercent.toFixed(2) + '%';
+                winrateValue.className = 'value ' + (winRatePercent >= 50 ? 'positive' : 'negative');
+
+                eloValue.textContent = (elo >= 0 ? '+' : '') + elo.toFixed(2);
+                eloValue.className = 'value ' + (elo >= 0 ? 'positive' : 'negative');
+
+                gamesInfo.textContent = `Игр: ${games}`;
+                noDataMessage.style.display = 'none';
+            } else {
+                winrateValue.textContent = '—';
+                winrateValue.className = 'value neutral';
+                eloValue.textContent = '—';
+                eloValue.className = 'value neutral';
+                gamesInfo.textContent = 'Игр: —';
+                noDataMessage.style.display = 'block';
+            }
+        }
+
+        // Обработка загрузки файла
+        fileInput.addEventListener('change', function(e) {
+            const file = this.files[0];
+            if (!file) {
+                fileNameDisplay.textContent = 'Файл не выбран';
+                return;
+            }
+            fileNameDisplay.textContent = file.name;
+
+            const reader = new FileReader();
+            reader.onload = function(ev) {
+                try {
+                    const csvText = ev.target.result;
+                    const parsed = parseCSV(csvText);
+                    if (parsed.length === 0) {
+                        alert('Не удалось распарсить CSV. Проверьте формат.');
+                        return;
+                    }
+                    data = parsed;
+
+                    // Собираем уникальные имена из Hero и Vs
+                    const nameSet = new Set();
+                    data.forEach(row => {
+                        if (row.Hero) nameSet.add(row.Hero);
+                        if (row.Vs) nameSet.add(row.Vs);
+                    });
+                    heroes = Array.from(nameSet);
+                    populateSelects(heroes);
+
+                    // Автоматически обновить результат (если что-то выбрано)
+                    updateResult();
+                } catch (err) {
+                    alert('Ошибка при чтении файла: ' + err.message);
+                }
+            };
+            reader.readAsText(file, 'UTF-8');
+        });
+
+        // События при изменении select'ов
+        heroSelect.addEventListener('change', updateResult);
+        vsSelect.addEventListener('change', updateResult);
+
+        // Инициализация: select'ы пусты, пока нет данных
+        // Можно добавить сообщение о необходимости загрузить CSV
+        winrateValue.textContent = '—';
+        eloValue.textContent = '—';
+        gamesInfo.textContent = 'Игр: —';
+        noDataMessage.style.display = 'none';
+
+        // Если пользователь загрузит файл повторно, всё обновится
+        // Также можно разрешить drag&drop, но для простоты оставим так.
+
+        // Небольшая подсказка в консоли
+        console.log('Загрузите CSV-файл с данными Hero_hth.csv');
+    })();
+</script>
+</body>
+</html>

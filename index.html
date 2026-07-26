@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dota 2 Рогалик-турнир</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div class="app">
+
+    <!-- ===== ЗАГРУЗКА ===== -->
+    <div id="loading">
+        <h2>Загрузка данных...</h2>
+        <div id="progress">0%</div>
+    </div>
+
+    <!-- ===== НАЧАЛЬНЫЙ ЭКРАН ===== -->
+    <div id="start-screen" class="start-screen" style="display:none;">
+        <h1>🎲 Dota 2 Рогалик-турнир</h1>
+        <p>Соберите свою команду из случайных кандидатов и выиграйте турнир!</p>
+        <div class="btn-group">
+            <button class="btn-big" id="btn-start">▶ Начать турнир</button>
+            <button class="btn-big secondary" id="btn-view-players">📋 Посмотреть всех игроков</button>
+
+
+            
+        </div>
+    </div>
+
+    <!-- ===== МОДАЛЬНОЕ ОКНО (список игроков) ===== -->
+    <div class="modal-overlay" id="modal-players">
+        <div class="modal">
+            <button class="modal-close" id="modal-close">&times;</button>
+            <h2>Все игроки по ролям</h2>
+            <div id="modal-content"></div>
+        </div>
+    </div>
+
+    <!-- ===== ОСНОВНОЙ ИНТЕРФЕЙС (пентагон + выбор) ===== -->
+    <div id="main-interface" style="display:none;">
+        <div class="main-layout">
+            <div class="pentagon-container">
+                <div class="pentagon">
+                    <svg viewBox="0 0 200 200">
+                        <polygon points="100,10 185,70 155,175 45,175 15,70" />
+                        <circle cx="100" cy="10" r="4" />
+                        <circle cx="185" cy="70" r="4" />
+                        <circle cx="155" cy="175" r="4" />
+                        <circle cx="45" cy="175" r="4" />
+                        <circle cx="15" cy="70" r="4" />
+                    </svg>
+                    <div id="avg-rating">
+                        <span id="avg-rating-value">—</span>
+                        <div id="avg-rating-label">средний рейтинг</div>
+                    </div>
+                    <div class="vertex-player pos-carry empty" id="slot-carry">
+                        <span class="player-name">—</span>
+                        <span class="player-rating"></span>
+                    </div>
+                    <div class="vertex-player pos-mid empty" id="slot-mid">
+                        <span class="player-name">—</span>
+                        <span class="player-rating"></span>
+                    </div>
+                    <div class="vertex-player pos-offlane empty" id="slot-offlane">
+                        <span class="player-name">—</span>
+                        <span class="player-rating"></span>
+                    </div>
+                    <div class="vertex-player pos-semi empty" id="slot-semi">
+                        <span class="player-name">—</span>
+                        <span class="player-rating"></span>
+                    </div>
+                    <div class="vertex-player pos-full empty" id="slot-full">
+                        <span class="player-name">—</span>
+                        <span class="player-rating"></span>
+                    </div>
+                </div>
+            </div>
+            <div class="selection-area">
+                <h3 id="step-title">Выберите <span id="role-name">Carry</span>
+                    <span class="step-info" id="step-counter">1 / 5</span>
+                </h3>
+                <div class="cards-grid" id="cards-container"></div>
+                <div class="action-row">
+                    <button class="btn" id="reroll-btn">🔄 Реролл (1 раз)</button>
+                    <span class="spacer"></span>
+                    <button class="btn btn-cancel" id="btn-cancel-draft">❌ Рестарт</button>
+                    <button class="btn btn-success" id="start-tournament-btn" disabled>🏆 Запустить турнир</button>
+                    <button class="btn btn-random" id="btn-random-teams" disabled>🔀 Случайные команды</button>
+                </div>
+                <div class="status-text" id="status-text">Выберите игрока на позицию Carry</div>
+                <div id="synergy-details">
+                    <h4>Синергии команды</h4>
+                    <div id="synergy-list"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== ТАБЛИЦА КОМАНД ===== -->
+    <div id="team-table-container" style="display:none;">
+        <h2>🏆 Команды турнира</h2>
+        <p>Команда пользователя отмечена ⭐. Состав указан в порядке: Carry, Mid, Offlane, Semi-Support, Full-Support.</p>
+        <div class="table-wrapper">
+            <table>
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th style="text-align:left;">Команда</th>
+                    </tr>
+                </thead>
+                <tbody id="team-table-body"></tbody>
+            </table>
+        </div>
+        <div class="action-center">
+            <button class="btn btn-success btn-start-final" id="btn-start-tournament-final">🏆 Начать турнир</button>
+        </div>
+    </div>
+
+    <!-- ===== ГРУППОВАЯ СТАДИЯ И МАТЧИ ===== -->
+    <div id="group-stage-wrapper" style="display:none;">
+        <div id="group-stage-container" class="group-table"></div>
+        <div id="matches-container" class="matches-list">
+            <div id="history-matches"></div>
+            <div id="current-matches"></div>
+        </div>
+    </div>
+
+    <!-- ===== ЭТАП НА ВЫБЫВАНИЕ ===== -->
+    <div id="elimination-wrapper" style="display:none;">
+        <div id="elimination-bracket" class="elimination-bracket">
+            <h3>Этап на выбывание</h3>
+            <div id="bracket-container"></div>
+        </div>
+        <div id="elimination-matches" class="elimination-matches">
+            <div id="elim-history-matches"></div>
+            <div id="elim-current-matches"></div>
+        </div>
+    </div>
+
+    <!-- ===== ПЛЕЙ-ОФФ ===== -->
+    <div id="playoff-wrapper" style="display:none;">
+        <h3>Плей-офф</h3>
+        <div id="playoff-bracket"></div>
+    </div>
+
+    <!-- ===== МОДАЛЬНОЕ ОКНО ДРАФТА ===== -->
+    <div id="draft-modal" style="display:none;">
+        <div class="draft-modal-content">
+            <button id="draft-close">&times;</button>
+            <h2>Драфт</h2>
+            <div id="draft-stage-label"></div>
+            <div id="draft-content"></div>
+            <div id="draft-result" style="display:none;">
+                <div class="draft-status">Игра симулируется...</div>
+                <div class="draft-score">
+                    <span id="draft-score-teamA">0</span>
+                    <span class="dash">-</span>
+                    <span id="draft-score-teamB">0</span>
+                </div>
+                <div id="draft-game-result"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== ТУЛТИП ===== -->
+    <div id="team-tooltip" style="display:none;"></div>
+
+    <!-- ===== РЕЗУЛЬТАТЫ ТУРНИРА ===== -->
+    <div class="tournament-results" id="tournament-results">
+        <h2>Результаты турнира</h2>
+        <div id="tournament-status"></div>
+        <div id="results-grid">
+            <div id="placements-container">
+                <h3>Итоговые места</h3>
+                <div id="placements-list"></div>
+            </div>
+            <div id="user-card-container">
+                <h3>Ваша команда</h3>
+                <div id="user-card"></div>
+            </div>
+        </div>
+        <div class="action-center">
+            <button class="btn btn-reset" id="btn-reset-tournament">🔄 Перезапустить турнир</button>
+        </div>
+    </div>
+
+</div>
+
+<script type="importmap">
+{
+    "imports": {
+        "./js/": "./js/"
+    }
+}
+</script>
+<script type="module" src="js/app.js"></script>
+</body>
+</html>

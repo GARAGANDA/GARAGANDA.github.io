@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Редактор статистики героев</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            max-width: 1200px;
+            margin: 20px auto;
+            padding: 0 20px;
+            background: #f5f7fa;
+        }
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+        }
+        .controls {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            align-items: center;
+            margin: 20px 0;
+            background: white;
+            padding: 15px 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .controls label {
+            font-weight: 600;
+            margin-right: 5px;
+        }
+        .controls select, .controls input[type="file"] {
+            padding: 8px 12px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+        .controls button {
+            padding: 8px 20px;
+            background: #3498db;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background 0.2s;
+        }
+        .controls button:hover {
+            background: #2980b9;
+        }
+        .controls button.danger {
+            background: #e74c3c;
+        }
+        .controls button.danger:hover {
+            background: #c0392b;
+        }
+        .controls button.success {
+            background: #2ecc71;
+        }
+        .controls button.success:hover {
+            background: #27ae60;
+        }
+        .table-container {
+            overflow-x: auto;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            margin-top: 20px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 14px;
+        }
+        table th {
+            background: #34495e;
+            color: white;
+            padding: 10px 12px;
+            text-align: left;
+            position: sticky;
+            top: 0;
+            z-index: 2;
+        }
+        table td {
+            padding: 8px 12px;
+            border-bottom: 1px solid #ecf0f1;
+        }
+        table tr:hover {
+            background: #f1f9ff;
+        }
+        table th:first-child, table td:first-child {
+            width: 40px;
+            text-align: center;
+        }
+        .hero-name {
+            font-weight: 500;
+        }
+        .no-data {
+            text-align: center;
+            padding: 30px;
+            color: #7f8c8d;
+        }
+        .csv-output {
+            margin-top: 20px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            padding: 15px;
+        }
+        .csv-output textarea {
+            width: 100%;
+            height: 200px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            padding: 10px;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            resize: vertical;
+            box-sizing: border-box;
+        }
+        .csv-output .copy-section {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            margin-top: 10px;
+        }
+        .checkbox-all {
+            margin-left: 20px;
+        }
+        .stats-summary {
+            margin: 5px 0 10px 0;
+            font-size: 14px;
+            color: #2c3e50;
+        }
+        .file-input-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        @media (max-width: 600px) {
+            .controls {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .controls select, .controls button, .controls input[type="file"] {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<h1>📊 Редактор статистики героев</h1>
+
+<div class="controls">
+    <div class="file-input-wrapper">
+        <label for="csvFile">📁 Загрузить CSV:</label>
+        <input type="file" id="csvFile" accept=".csv">
+    </div>
+    <div>
+        <label for="playerSelect">👤 Игрок:</label>
+        <select id="playerSelect" disabled>
+            <option value="">— загрузите файл —</option>
+        </select>
+    </div>
+    <button id="deleteBtn" class="danger" disabled>🗑️ Удалить выбранных героев</button>
+    <button id="selectAllBtn">☑️ Выбрать всех</button>
+    <button id="deselectAllBtn">☐ Снять всех</button>
+</div>
+
+<div class="table-container" id="tableContainer">
+    <div class="no-data">Загрузите CSV-файл, чтобы начать</div>
+</div>
+
+<div class="csv-output">
+    <h3>📋 Итоговый CSV (после удалений)</h3>
+    <textarea id="csvResult" readonly placeholder="Здесь появится итоговый CSV-файл..."></textarea>
+    <div class="copy-section">
+        <button id="copyBtn" class="success">📋 Скопировать CSV</button>
+        <span id="copyStatus" style="color: #27ae60;"></span>
+    </div>
+</div>
+
+<script>
+    (function() {
+        // Глобальные данные
+        let data = [];               // массив объектов { Hero, Player, TotalCount, Winrate, AvgKAL }
+        let headers = [];
+        let currentPlayer = '';
+        let filteredData = [];       // данные для отображения (после фильтрации по игроку)
+
+        // DOM элементы
+        const fileInput = document.getElementById('csvFile');
+        const playerSelect = document.getElementById('playerSelect');
+        const tableContainer = document.getElementById('tableContainer');
+        const deleteBtn = document.getElementById('deleteBtn');
+        const selectAllBtn = document.getElementById('selectAllBtn');
+        const deselectAllBtn = document.getElementById('deselectAllBtn');
+        const csvResult = document.getElementById('csvResult');
+        const copyBtn = document.getElementById('copyBtn');
+        const copyStatus = document.getElementById('copyStatus');
+
+        // Парсинг CSV с разделителем ;
+        function parseCSV(text) {
+            const lines = text.split(/\r?\n/).filter(line => line.trim() !== '');
+            if (lines.length === 0) return { headers: [], rows: [] };
+
+            // Определяем разделитель: первая строка содержит ; 
+            const firstLine = lines[0];
+            const delimiter = firstLine.includes(';') ? ';' : ','; 
+            // Но у нас точно ';', но для универсальности оставим автоопределение.
+
+            const headerLine = lines[0];
+            const headers = headerLine.split(delimiter).map(h => h.trim());
+            const rows = [];
+            for (let i = 1; i < lines.length; i++) {
+                const values = lines[i].split(delimiter);
+                if (values.length !== headers.length) {
+                    // Может быть случай с кавычками, но здесь нет, просто пропускаем
+                    continue;
+                }
+                const row = {};
+                headers.forEach((h, idx) => {
+                    let val = values[idx] ? values[idx].trim() : '';
+                    row[h] = val;
+                });
+                rows.push(row);
+            }
+            return { headers, rows };
+        }
+
+        // Преобразование данных в CSV строку
+        function dataToCSV(dataArray, headers) {
+            if (!dataArray || dataArray.length === 0) return headers.join(';') + '\n';
+            const lines = [];
+            lines.push(headers.join(';'));
+            dataArray.forEach(row => {
+                const vals = headers.map(h => row[h] !== undefined ? row[h] : '');
+                lines.push(vals.join(';'));
+            });
+            return lines.join('\n');
+        }
+
+        // Обновить выпадающий список игроков
+        function updatePlayerSelect(players) {
+            playerSelect.innerHTML = '';
+            if (players.length === 0) {
+                playerSelect.innerHTML = '<option value="">— нет игроков —</option>';
+                playerSelect.disabled = true;
+                return;
+            }
+            players.sort();
+            players.forEach(p => {
+                const opt = document.createElement('option');
+                opt.value = p;
+                opt.textContent = p;
+                playerSelect.appendChild(opt);
+            });
+            playerSelect.disabled = false;
+            // Выбрать первого
+            playerSelect.value = players[0];
+            currentPlayer = players[0];
+            filterAndRender(currentPlayer);
+        }
+
+        // Фильтрация по игроку и отрисовка таблицы
+        function filterAndRender(player) {
+            currentPlayer = player;
+            filteredData = data.filter(row => row.Player === player);
+            renderTable(filteredData);
+            updateDeleteButtonState();
+            updateCSVOutput();
+        }
+
+        // Отрисовка таблицы с чекбоксами
+        function renderTable(rows) {
+            if (!rows || rows.length === 0) {
+                tableContainer.innerHTML = `<div class="no-data">Нет данных для выбранного игрока</div>`;
+                return;
+            }
+
+            let html = `<table>
+                <thead>
+                    <tr>
+                        <th><input type="checkbox" id="selectAllCheckbox"></th>
+                        <th>Герой</th>
+                        <th>Всего игр</th>
+                        <th>Винрейт</th>
+                        <th>Ср. KAL</th>
+                    </tr>
+                </thead>
+                <tbody>`;
+            rows.forEach((row, index) => {
+                const hero = row.Hero;
+                const total = row['Total Count'] || row['TotalCount'] || '';
+                const winrate = row.Winrate || '';
+                const kal = row['Avg. KAL'] || row['AvgKAL'] || '';
+                html += `<tr>
+                    <td><input type="checkbox" class="hero-checkbox" data-index="${index}" data-hero="${hero}"></td>
+                    <td class="hero-name">${hero}</td>
+                    <td>${total}</td>
+                    <td>${winrate}</td>
+                    <td>${kal}</td>
+                </tr>`;
+            });
+            html += `</tbody></table>`;
+            tableContainer.innerHTML = html;
+
+            // Обработчик для чекбокса "выбрать все"
+            const selectAll = document.getElementById('selectAllCheckbox');
+            if (selectAll) {
+                selectAll.addEventListener('change', function(e) {
+                    const checkboxes = document.querySelectorAll('.hero-checkbox');
+                    checkboxes.forEach(cb => cb.checked = this.checked);
+                    updateDeleteButtonState();
+                });
+            }
+
+            // При изменении любого чекбокса обновляем состояние кнопки удаления
+            document.querySelectorAll('.hero-checkbox').forEach(cb => {
+                cb.addEventListener('change', updateDeleteButtonState);
+            });
+
+            // Обновляем состояние кнопки удаления
+            updateDeleteButtonState();
+        }
+
+        // Обновить активность кнопки удаления
+        function updateDeleteButtonState() {
+            const checked = document.querySelectorAll('.hero-checkbox:checked');
+            deleteBtn.disabled = checked.length === 0;
+        }
+
+        // Обновить вывод итогового CSV
+        function updateCSVOutput() {
+            if (data.length === 0) {
+                csvResult.value = '';
+                return;
+            }
+            const csvString = dataToCSV(data, headers);
+            csvResult.value = csvString;
+        }
+
+        // Обработка загрузки файла
+        fileInput.addEventListener('change', function(e) {
+            const file = this.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function(event) {
+                const text = event.target.result;
+                const parsed = parseCSV(text);
+                if (parsed.rows.length === 0) {
+                    alert('Не удалось распарсить CSV. Проверьте формат (разделитель ";").');
+                    return;
+                }
+                data = parsed.rows;
+                headers = parsed.headers;
+
+                // Получаем уникальных игроков
+                const players = [...new Set(data.map(row => row.Player))].filter(Boolean);
+                if (players.length === 0) {
+                    alert('В файле не найдены игроки (столбец Player).');
+                    return;
+                }
+
+                // Обновляем выпадающий список
+                updatePlayerSelect(players);
+
+                // Активируем элементы
+                deleteBtn.disabled = false;
+
+                // Обновляем итоговый CSV
+                updateCSVOutput();
+
+                // Выводим сообщение
+                console.log(`Загружено ${data.length} записей, игроков: ${players.length}`);
+            };
+            reader.readAsText(file);
+        });
+
+        // Удаление выбранных героев для текущего игрока
+        deleteBtn.addEventListener('click', function() {
+            const checkboxes = document.querySelectorAll('.hero-checkbox:checked');
+            if (checkboxes.length === 0) return;
+
+            const heroesToDelete = new Set();
+            checkboxes.forEach(cb => {
+                heroesToDelete.add(cb.dataset.hero);
+            });
+
+            // Подтверждение
+            if (!confirm(`Удалить ${heroesToDelete.size} героев у игрока "${currentPlayer}"?`)) return;
+
+            // Удаляем строки из data
+            const newData = data.filter(row => {
+                if (row.Player === currentPlayer && heroesToDelete.has(row.Hero)) {
+                    return false; // удаляем
+                }
+                return true;
+            });
+
+            data = newData;
+
+            // Обновить выпадающий список (возможно игроков стало меньше)
+            const players = [...new Set(data.map(row => row.Player))].filter(Boolean);
+            if (players.length === 0) {
+                // Нет данных
+                playerSelect.innerHTML = '<option value="">— нет игроков —</option>';
+                playerSelect.disabled = true;
+                tableContainer.innerHTML = `<div class="no-data">Нет данных</div>`;
+                csvResult.value = '';
+                deleteBtn.disabled = true;
+                return;
+            }
+
+            // Обновить select, сохранив текущего игрока, если он ещё есть
+            const currentPlayerExists = players.includes(currentPlayer);
+            updatePlayerSelect(players);
+            if (currentPlayerExists) {
+                playerSelect.value = currentPlayer;
+                filterAndRender(currentPlayer);
+            } else {
+                // выбрать первого
+                playerSelect.value = players[0];
+                filterAndRender(players[0]);
+            }
+            updateCSVOutput();
+        });
+
+        // Выбрать всех героев
+        selectAllBtn.addEventListener('click', function() {
+            document.querySelectorAll('.hero-checkbox').forEach(cb => cb.checked = true);
+            updateDeleteButtonState();
+        });
+
+        // Снять всех героев
+        deselectAllBtn.addEventListener('click', function() {
+            document.querySelectorAll('.hero-checkbox').forEach(cb => cb.checked = false);
+            updateDeleteButtonState();
+        });
+
+        // При смене игрока в select
+        playerSelect.addEventListener('change', function() {
+            const player = this.value;
+            if (player) {
+                filterAndRender(player);
+            }
+        });
+
+        // Копирование CSV
+        copyBtn.addEventListener('click', function() {
+            const text = csvResult.value;
+            if (!text) {
+                copyStatus.textContent = 'Нет данных для копирования';
+                return;
+            }
+            navigator.clipboard.writeText(text).then(() => {
+                copyStatus.textContent = '✅ Скопировано!';
+                setTimeout(() => copyStatus.textContent = '', 3000);
+            }).catch(() => {
+                // Fallback
+                const textarea = document.createElement('textarea');
+                textarea.value = text;
+                document.body.appendChild(textarea);
+                textarea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textarea);
+                copyStatus.textContent = '✅ Скопировано!';
+                setTimeout(() => copyStatus.textContent = '', 3000);
+            });
+        });
+
+        // Инициализация: по умолчанию ничего не загружено
+        deleteBtn.disabled = true;
+
+        // Обработка случая, когда пользователь загружает файл повторно — сбрасываем состояние
+        // Уже реализовано через событие change.
+
+        // Дополнительно: если пользователь захочет загрузить другой файл, старые данные очистятся автоматически.
+    })();
+</script>
+
+</body>
+</html>

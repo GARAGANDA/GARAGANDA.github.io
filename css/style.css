@@ -1,0 +1,4700 @@
+/* ============================================================
+   style.css – единый файл стилей
+   Все блоки прозрачные, фон виден через них.
+   ============================================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap');
+
+:root {
+    --font-family: 'Inter', 'Segoe UI', sans-serif;
+    --color-bg: #0a0a0f;
+    --color-surface: #0a0a0f;
+    --color-surface-light: #14141e;
+    --color-surface-card: #1a1a2a;
+    --color-border: #1a1a2a;
+    --color-text: #eee;
+    --color-text-secondary: #aaa;
+    --color-text-muted: #888;
+    --color-accent: #e74c3c;
+    --color-accent-hover: #c0392b;
+    --color-success: #4caf50;
+    --color-warning: #ffd93d;
+    --color-danger: #f44336;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: var(--font-family);
+    background: #0a0a0f;
+    color: var(--color-text);
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    background-image: radial-gradient(circle at 20% 30%, #14141e 0%, #0a0a0f 100%);
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 1.5;
+}
+
+.app {
+    max-width: 1400px;
+    width: 100%;
+}
+
+/* ===== БАЗОВАЯ ТИПОГРАФИКА ===== */
+h1 {
+    font-size: 3.8em;
+    font-weight: 800;
+    letter-spacing: 2px;
+    color: #fff;
+    margin-bottom: 6px;
+}
+h2 {
+    font-size: 1.8em;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+    color: var(--color-text);
+    margin-bottom: 16px;
+}
+h3 {
+    font-size: 1.4em;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    color: var(--color-text);
+    margin-bottom: 12px;
+}
+h4 {
+    font-size: 1.1em;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    color: var(--color-text-secondary);
+    margin-bottom: 8px;
+}
+p {
+    font-size: 1em;
+    font-weight: 400;
+    color: var(--color-text-secondary);
+    margin-bottom: 16px;
+}
+small, .small {
+    font-size: 0.8em;
+    font-weight: 400;
+    color: var(--color-text-muted);
+}
+strong, .strong {
+    font-weight: 700;
+}
+.uppercase {
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+/* ===== АНИМАЦИИ ===== */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes slideUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes pulse {
+    0%   { box-shadow: 0 0 0 0 rgba(231, 76, 60, 0.4); }
+    70%  { box-shadow: 0 0 0 10px rgba(231, 76, 60, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(231, 76, 60, 0); }
+}
+@keyframes scaleIn {
+    from { transform: scale(0.9); opacity: 0; }
+    to   { transform: scale(1); opacity: 1; }
+}
+
+/* ===== ЗАГРУЗКА ===== */
+#loading {
+    text-align: center;
+    padding: 60px 20px;
+    animation: fadeIn 0.6s ease;
+}
+#loading h2 {
+    font-weight: 600;
+    color: #fff;
+    letter-spacing: 1px;
+}
+#progress {
+    font-size: 1.4em;
+    font-weight: 700;
+    margin-top: 16px;
+    color: var(--color-accent);
+    background: var(--color-surface-light);
+    display: inline-block;
+    padding: 8px 30px;
+    border-radius: 40px;
+    border: 1px solid var(--color-accent);
+    min-width: 80px;
+    font-variant-numeric: tabular-nums;
+}
+
+/* ===== НАЧАЛЬНЫЙ ЭКРАН ===== */
+.start-screen {
+    text-align: center;
+    padding: 80px 30px;
+    background: var(--color-surface);
+    border-radius: 24px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8);
+    border: 1px solid var(--color-border);
+    animation: fadeIn 0.8s ease;
+}
+.start-screen h1 {
+    font-size: 3.8em;
+    font-weight: 800;
+    color: #fff;
+    margin-bottom: 6px;
+    letter-spacing: 2px;
+}
+.start-screen h1 span { color: var(--color-accent); }
+.start-screen p {
+    font-size: 1.2em;
+    font-weight: 400;
+    color: var(--color-text-secondary);
+    margin-bottom: 40px;
+}
+.btn-group {
+    display: flex;
+    gap: 24px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+.btn-big {
+    font-family: var(--font-family);
+    font-size: 1.2em;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    background: var(--color-accent);
+    border: 2px solid var(--color-accent);
+    color: #fff;
+    padding: 16px 44px;
+    border-radius: 60px;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    min-width: 200px;
+}
+.btn-big:hover {
+    transform: translateY(-3px) scale(1.02);
+    box-shadow: 0 12px 30px rgba(231, 76, 60, 0.4);
+    background: var(--color-accent-hover);
+    border-color: var(--color-accent-hover);
+}
+.btn-big.secondary {
+    background: transparent;
+    color: #fff;
+    border-color: #555;
+}
+.btn-big.secondary:hover {
+    background: var(--color-surface-light);
+    border-color: var(--color-text-secondary);
+    box-shadow: 0 8px 20px rgba(255, 255, 255, 0.05);
+}
+
+/* ===== МОДАЛЬНЫЕ ОКНА ===== */
+.modal-overlay {
+    display: none;
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: rgba(0, 0, 0, 0.85);
+    z-index: 1000;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    backdrop-filter: blur(4px);
+}
+.modal-overlay.active,
+.modal-overlay[style*="display: flex"] {
+    display: flex !important;
+}
+.modal {
+    background: #0a0a0f;
+    max-width: 1200px;
+    width: 100%;
+    max-height: 90vh;
+    border-radius: 20px;
+    padding: 30px;
+    overflow-y: auto;
+    position: relative;
+    box-shadow: 0 30px 80px rgba(0, 0, 0, 0.9);
+    border: 1px solid var(--color-border);
+}
+.modal-close {
+    position: absolute;
+    top: 16px; right: 24px;
+    background: none;
+    border: none;
+    color: var(--color-text-secondary);
+    font-size: 32px;
+    cursor: pointer;
+    transition: color 0.2s;
+}
+.modal-close:hover { color: var(--color-accent); }
+.modal h2 {
+    font-size: 1.8em;
+    font-weight: 700;
+    color: var(--color-accent);
+    letter-spacing: -0.5px;
+    margin-top: 0;
+    margin-bottom: 16px;
+}
+.modal table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+    color: var(--color-text);
+}
+.modal table th {
+    font-weight: 600;
+    color: var(--color-accent);
+    border-bottom: 2px solid var(--color-accent);
+    padding: 8px 6px;
+    text-align: left;
+}
+.modal table td {
+    padding: 6px 6px;
+    border-bottom: 1px solid var(--color-border);
+}
+.modal table tr:hover td {
+    background: var(--color-surface-light);
+}
+.modal table .player-name {
+    font-weight: 500;
+    color: #fff;
+}
+.modal table .role {
+    color: var(--color-text-secondary);
+}
+.modal table .player-rating {
+    text-align: right;
+    font-weight: 600;
+    color: var(--color-accent);
+}
+.teammates-modal-content {
+    max-width: 600px;
+    max-height: 80vh;
+}
+#modal-players .players-table-wrapper {
+    display: flex;
+    flex-wrap: nowrap;
+    gap: 14px;
+    justify-content: flex-start;
+    overflow-x: auto;
+    padding: 4px 0;
+}
+#modal-players .players-table-block {
+    flex: 1 1 auto;
+    min-width: 180px;
+    background: var(--color-surface-card);
+    padding: 12px 14px;
+    border-radius: 12px;
+    border: 1px solid var(--color-border);
+}
+#modal-players .players-table-block h4 {
+    font-size: 1.1em;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    color: var(--color-accent);
+    margin: 0 0 10px 0;
+    text-align: center;
+    border-bottom: 1px solid var(--color-border);
+    padding-bottom: 6px;
+}
+#modal-players .players-table-block table {
+    font-size: 0.95em;
+}
+#modal-players .players-table-block table th {
+    font-weight: 500;
+    color: var(--color-text-secondary);
+    border-bottom: 1px solid var(--color-border);
+}
+
+/* ===== МОДАЛЬНОЕ ОКНО ДРАФТА ===== */
+#draft-modal {
+    display: none;
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: rgba(0, 0, 0, 0.85);
+    z-index: 9999;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    overflow-y: auto;
+}
+.draft-modal-content {
+    background: #0a0a0f;
+    max-width: 1200px;
+    width: 100%;
+    border-radius: 20px;
+    padding: 20px;
+    box-shadow: 0 0 50px rgba(0, 0, 0, 0.9);
+    position: relative;
+}
+#draft-close {
+    position: absolute;
+    top: 10px; right: 20px;
+    background: none;
+    border: none;
+    color: #fff;
+    font-size: 30px;
+    cursor: pointer;
+    display: none;
+}
+#draft-modal h2 {
+    font-size: 1.8em;
+    font-weight: 700;
+    color: var(--color-accent);
+    text-align: center;
+    margin: 0 0 10px 0;
+}
+#draft-stage-label {
+    font-size: 1.1em;
+    font-weight: 400;
+    color: var(--color-text-secondary);
+    text-align: center;
+    margin-bottom: 10px;
+}
+#draft-content {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+#draft-result {
+    display: none;
+    text-align: center;
+    margin-top: 10px;
+}
+#draft-result .draft-status {
+    font-size: 1.2em;
+    font-weight: 600;
+    color: var(--color-accent);
+}
+#draft-result .draft-score {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    margin: 10px 0;
+    font-size: 1.2em;
+    font-weight: 600;
+}
+#draft-score-teamA, #draft-score-teamB {
+    color: var(--color-text);
+}
+.dash { color: var(--color-text-secondary); }
+#draft-game-result {
+    font-weight: 700;
+    font-size: 1.1em;
+    color: var(--color-success);
+}
+
+/* ===== ТУЛТИП ===== */
+#team-tooltip {
+    display: none;
+    position: fixed;
+    background: var(--color-surface-light);
+    border: 1px solid var(--color-accent);
+    border-radius: 10px;
+    padding: 12px 16px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.8);
+    z-index: 10001;
+    max-width: 280px;
+    pointer-events: none;
+    color: var(--color-text);
+    font-size: 14px;
+    font-weight: 400;
+}
+
+/* ===== ОСНОВНОЙ ИНТЕРФЕЙС ===== */
+.main-layout {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 40px;
+    align-items: center;
+    justify-content: center;
+    background: var(--color-surface);
+    padding: 30px;
+    border-radius: 24px;
+    border: 1px solid var(--color-border);
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
+    animation: fadeIn 0.6s ease;
+}
+
+.pentagon-container {
+    flex: 0 0 380px;
+    min-width: 320px;
+    position: relative;
+    height: 380px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.pentagon {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    max-width: 380px;
+    max-height: 380px;
+}
+.pentagon svg {
+    width: 100%;
+    height: 100%;
+    display: block;
+    filter: drop-shadow(0 0 8px rgba(231, 76, 60, 0.2));
+}
+.pentagon polygon {
+    stroke: var(--color-accent);
+    stroke-width: 3;
+    fill: none;
+}
+.pentagon circle {
+    fill: var(--color-accent);
+    opacity: 0.6;
+}
+
+#avg-rating {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 28px;
+    font-weight: 700;
+    color: #fff;
+    text-shadow: 0 0 30px rgba(231, 76, 60, 0.3);
+    pointer-events: none;
+    text-align: center;
+    line-height: 1.2;
+    background: rgba(10, 10, 15, 0.8);
+    padding: 10px 20px;
+    border-radius: 16px;
+    border: 1px solid var(--color-accent);
+    transition: all 0.3s ease;
+    backdrop-filter: blur(4px);
+}
+#avg-rating-value {
+    display: block;
+    font-size: 34px;
+    font-weight: 700;
+    color: var(--color-accent);
+    font-variant-numeric: tabular-nums;
+}
+#avg-rating-label {
+    font-size: 11px;
+    font-weight: 400;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--color-text-secondary);
+}
+
+.vertex-player {
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: rgba(20, 20, 30, 0.9);
+    border: 2px solid #444;
+    border-radius: 20px;
+    padding: 6px 14px;
+    min-width: 80px;
+    max-width: 120px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.6);
+    text-align: center;
+    transform: translate(-50%, -50%);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    pointer-events: auto !important;
+    cursor: pointer;
+    transition: border-color 0.3s, border-width 0.3s, transform 0.3s, box-shadow 0.3s;
+    backdrop-filter: blur(4px);
+}
+.vertex-player .player-name {
+    font-size: 16px;
+    font-weight: 600;
+    color: #fff;
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.8);
+    line-height: 1.2;
+}
+.vertex-player .player-rating {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--color-accent);
+    line-height: 1.2;
+    margin-top: -2px;
+}
+.vertex-player.empty .player-name { color: #666; }
+.vertex-player.empty .player-rating { display: none; }
+.vertex-player:not(.empty) {
+    border-color: var(--color-accent);
+    border-width: 3px;
+    animation: pulse 2s infinite;
+}
+.vertex-player:not(.empty):hover {
+    transform: translate(-50%, -50%) scale(1.05);
+    box-shadow: 0 0 30px rgba(231, 76, 60, 0.3);
+}
+.pos-carry   { left: 92.5%; top: 35%; }
+.pos-mid     { left: 50%;   top: 5%;  }
+.pos-offlane { left: 7.5%;  top: 35%; }
+.pos-semi    { left: 22.5%; top: 87.5%; }
+.pos-full    { left: 77.5%; top: 87.5%; }
+
+.pentagon line.synergy-line {
+    stroke-width: 4;
+    stroke-linecap: round;
+    opacity: 0.8;
+    transition: stroke 0.3s;
+}
+.pentagon line.synergy-line.inactive {
+    stroke: #444;
+    stroke-dasharray: 6 6;
+    opacity: 0.3;
+}
+.pentagon line.synergy-line.active {
+    stroke: var(--color-accent);
+    stroke-width: 4;
+    opacity: 0.9;
+}
+
+.selection-area {
+    flex: 1 1 400px;
+    min-width: 280px;
+    background: var(--color-surface-light);
+    padding: 24px;
+    border-radius: 20px;
+    border: 1px solid var(--color-border);
+    animation: slideUp 0.5s ease;
+}
+.selection-area h3 {
+    font-size: 1.2em;
+    font-weight: 600;
+    color: #fff;
+    border-bottom: 1px solid var(--color-border);
+    padding-bottom: 12px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.selection-area h3 #role-name { color: var(--color-accent); }
+.selection-area h3 .step-info {
+    font-size: 0.8em;
+    font-weight: 400;
+    color: var(--color-text-muted);
+}
+.spacer { flex: 1; }
+
+.cards-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 12px;
+    margin: 16px 0;
+}
+.card {
+    background: var(--color-surface-card);
+    padding: 16px 8px;
+    border-radius: 12px;
+    cursor: pointer;
+    border: 2px solid transparent;
+    transition: all 0.2s ease;
+    text-align: center;
+    font-weight: 500;
+    font-size: 1em;
+    color: var(--color-text-secondary);
+    position: relative;
+    animation: scaleIn 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 80px;
+}
+.card:hover {
+    background: #2a2a40;
+    border-color: var(--color-accent);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(231, 76, 60, 0.15);
+}
+.card.selected {
+    border-color: var(--color-accent);
+    background: #2a1a1a;
+}
+.card .role-label {
+    font-size: 0.85em;
+    font-weight: 400;
+    color: var(--color-text-secondary);
+    margin-top: 2px;
+}
+.card .rating-label {
+    font-size: 0.9em;
+    font-weight: 600;
+    color: var(--color-warning);
+    margin-top: 2px;
+}
+.card .winrate {
+    font-size: 0.8em;
+    font-weight: 400;
+    color: var(--color-text-muted);
+    display: block;
+    margin-top: 4px;
+}
+.card .source-tag {
+    font-size: 0.7em;
+    font-weight: 400;
+    color: #666;
+}
+.card.disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
+.no-candidates {
+    font-weight: 400;
+    color: var(--color-danger);
+    text-align: center;
+    padding: 20px;
+}
+
+.action-row {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    align-items: center;
+    margin-top: 12px;
+}
+.btn {
+    font-family: var(--font-family);
+    font-size: 0.95em;
+    font-weight: 600;
+    background: transparent;
+    border: 2px solid #555;
+    color: var(--color-text);
+    padding: 10px 20px;
+    border-radius: 40px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+.btn:hover {
+    background: var(--color-surface-light);
+    border-color: var(--color-text-secondary);
+    transform: translateY(-2px);
+}
+.btn:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+    transform: none !important;
+}
+.btn-success {
+    background: var(--color-accent);
+    border-color: var(--color-accent);
+    color: #fff;
+}
+.btn-success:hover {
+    background: var(--color-accent-hover);
+    border-color: var(--color-accent-hover);
+    box-shadow: 0 8px 25px rgba(231, 76, 60, 0.3);
+}
+.btn-success:disabled {
+    background: #444;
+    border-color: #444;
+    box-shadow: none;
+}
+.btn-cancel {
+    background: transparent;
+    border-color: #555;
+    color: var(--color-text-secondary);
+}
+.btn-cancel:hover {
+    background: var(--color-surface-light);
+    border-color: var(--color-text-secondary);
+    color: #fff;
+}
+.btn-random {
+    background: transparent;
+    border-color: #555;
+    color: var(--color-text);
+    margin-left: 10px;
+}
+.btn-random:hover {
+    background: var(--color-surface-light);
+    border-color: var(--color-text-secondary);
+}
+.btn-reset {
+    background: var(--color-accent);
+    border-color: var(--color-accent);
+    color: #fff;
+    font-size: 1.1em;
+    font-weight: 600;
+    padding: 12px 30px;
+}
+.btn-reset:hover {
+    background: var(--color-accent-hover);
+    border-color: var(--color-accent-hover);
+}
+.btn-start-final {
+    font-size: 1.2em;
+    font-weight: 600;
+    padding: 14px 40px;
+}
+.action-center {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.status-text {
+    margin-top: 16px;
+    padding: 12px 16px;
+    background: var(--color-surface-light);
+    border-radius: 12px;
+    font-size: 0.95em;
+    font-weight: 400;
+    min-height: 50px;
+    border-left: 4px solid var(--color-accent);
+    color: var(--color-text-secondary);
+}
+#synergy-details {
+    margin-top: 16px;
+    padding: 12px 16px;
+    background: var(--color-surface-light);
+    border-radius: 12px;
+    max-height: 200px;
+    overflow-y: auto;
+    border: 1px solid var(--color-border);
+}
+#synergy-details h4 {
+    font-size: 1em;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    color: var(--color-accent);
+    margin: 0 0 10px 0;
+}
+#synergy-list {
+    font-size: 0.9em;
+    font-weight: 400;
+    color: var(--color-text-secondary);
+}
+#synergy-list table {
+    width: 100%;
+    border-collapse: collapse;
+}
+#synergy-list table td {
+    padding: 4px 4px;
+    border-bottom: 1px solid #1a2a3e;
+}
+#synergy-list .synergy-players {
+    color: var(--color-text-secondary);
+}
+#synergy-list .synergy-bonus {
+    font-weight: 600;
+    color: var(--color-warning);
+    text-align: right;
+}
+#synergy-list .synergy-bonus.negative {
+    color: var(--color-danger);
+}
+#synergy-list .synergy-separator td {
+    padding: 6px 0 4px 0;
+    border-bottom: 1px solid #2a4a6e;
+}
+#synergy-list .synergy-player-negative {
+    color: var(--color-text);
+}
+.synergy-empty {
+    color: var(--color-text-muted);
+}
+
+.match-card {
+    background: var(--color-surface-light);
+    padding: 6px 12px;
+    border-radius: 6px;
+    margin: 4px 0;
+    border-left: 3px solid var(--color-accent);
+    animation: slideUp 0.3s ease;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.85em;
+    font-weight: 400;
+}
+.match-card .winner {
+    color: var(--color-accent);
+    font-weight: 700;
+}
+.match-card .score {
+    font-weight: 600;
+    color: #fff;
+    font-variant-numeric: tabular-nums;
+}
+.match-card .team-name {
+    color: var(--color-text);
+    font-weight: 500;
+}
+.match-card .team-name.winner {
+    color: var(--color-accent);
+    font-weight: 700;
+}
+.matches-list-inner {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+.no-matches {
+    color: var(--color-text-muted);
+    font-style: italic;
+    font-weight: 400;
+}
+
+.table-wrapper {
+    overflow-x: auto;
+}
+table {
+    width: 100%;
+    border-collapse: collapse;
+    color: var(--color-text);
+    font-size: 14px;
+}
+th {
+    font-weight: 600;
+    color: var(--color-accent);
+    border-bottom: 2px solid var(--color-accent);
+    padding: 8px 6px;
+    text-align: center;
+    letter-spacing: 0.5px;
+}
+td {
+    padding: 6px 4px;
+    border-bottom: 1px solid var(--color-border);
+    font-weight: 400;
+}
+tr:hover td {
+    background: var(--color-surface-light);
+}
+
+.group-table table tr {
+    background: transparent;
+}
+.group-table table td.highlight-green {
+    background: #1a2a1a;
+}
+.group-table table td.highlight-yellow {
+    background: #2a2a1a;
+}
+.group-table table td.highlight-red {
+    background: #2a1a1a;
+}
+.group-table table tr:hover td {
+    background: var(--color-surface-light);
+}
+.group-table table tr:hover td.highlight-green {
+    background: #1a3a1a;
+}
+.group-table table tr:hover td.highlight-yellow {
+    background: #3a3a1a;
+}
+.group-table table tr:hover td.highlight-red {
+    background: #3a1a1a;
+}
+
+#group-stage-wrapper,
+#elimination-wrapper {
+    display: none;
+    flex-wrap: wrap;
+    gap: 20px;
+    margin-top: 30px;
+    align-items: flex-start;
+    animation: fadeIn 0.5s ease;
+}
+.group-table,
+.elimination-bracket,
+.matches-list,
+.elimination-matches,
+#team-table-container,
+#playoff-wrapper,
+.tournament-results {
+    padding: 16px;
+    border-radius: 16px;
+    border: 1px solid #1a1a2a;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+    background: transparent;
+}
+.group-table {
+    flex: 2;
+    min-width: 300px;
+}
+.matches-list {
+    flex: 1;
+    min-width: 250px;
+    max-height: 1450px;
+    overflow-y: auto;
+}
+.elimination-bracket {
+    flex: 2;
+    min-width: 300px;
+}
+.elimination-matches {
+    flex: 1;
+    min-width: 250px;
+    max-height: 560px;
+    overflow-y: auto;
+}
+#team-table-container {
+    margin-top: 30px;
+}
+#team-table-container h2 {
+    font-weight: 700;
+    color: var(--color-accent);
+}
+#team-table-container p {
+    font-weight: 400;
+    color: var(--color-text-secondary);
+}
+
+.elimination-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    width: 100%;
+    max-width: 700px;
+    margin: 0 auto;
+}
+.elimination-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 6px 12px;
+    background: var(--color-surface-light);
+    border-radius: 8px;
+    font-weight: 600;
+    color: var(--color-accent);
+    border-bottom: 2px solid var(--color-accent);
+    margin-bottom: 4px;
+    font-size: 0.9em;
+}
+.elimination-match-label {
+    flex: 3;
+    text-align: left;
+}
+.elimination-winner-label {
+    flex: 1;
+    text-align: center;
+    font-size: 0.85em;
+}
+.elimination-match {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: var(--color-surface-light);
+    padding: 8px 14px;
+    border-radius: 8px;
+    border-left: 4px solid var(--color-accent);
+    gap: 12px;
+    animation: slideUp 0.3s ease;
+}
+.elimination-teams {
+    flex: 3;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+.elimination-team {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 0.9em;
+    font-weight: 400;
+}
+.elimination-team .team-logo--large {
+    width: 55px;
+    height: 55px;
+    object-fit: contain;
+    flex-shrink: 0;
+}
+.elimination-team-name {
+    flex: 1;
+    text-align: left;
+    font-weight: 500;
+}
+.elimination-team.winner {
+    background: #1a2a1a;
+    color: var(--color-accent);
+    font-weight: 600;
+}
+.elimination-team.winner .elimination-team-name {
+    color: var(--color-accent);
+    font-weight: 700;
+}
+.elimination-score {
+    font-weight: 700;
+    color: var(--color-accent);
+    min-width: 28px;
+    text-align: center;
+    font-variant-numeric: tabular-nums;
+    margin-left: auto;
+}
+.elimination-winner {
+    flex: 1;
+    text-align: center;
+    font-weight: 600;
+    font-size: 0.9em;
+    color: var(--color-accent);
+    background: var(--color-surface-light);
+    padding: 4px 10px;
+    border-radius: 12px;
+    min-width: 60px;
+    border: 1px solid var(--color-accent);
+}
+.elimination-empty {
+    color: var(--color-text-muted);
+    font-style: italic;
+    padding: 20px;
+    text-align: center;
+}
+.match-card .team-logo--large {
+    width: 55px;
+    height: 55px;
+    object-fit: contain;
+    flex-shrink: 0;
+}
+
+#playoff-wrapper {
+    display: none;
+    margin-top: 30px;
+    animation: fadeIn 0.5s ease;
+}
+.playoff-main {
+    display: flex;
+    flex-direction: row;
+    gap: 40px;
+    align-items: stretch;
+    justify-content: flex-start;
+}
+.playoff-left {
+    flex: 1 1 auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 20px;
+}
+.playoff-right {
+    flex: 0 0 auto;
+    display: flex;
+    align-items: center;
+}
+.playoff-section { width: 100%; }
+.playoff-section-grid {
+    display: flex;
+    flex-wrap: nowrap;
+    gap: 30px;
+    justify-content: center;
+    align-items: stretch;
+    overflow-x: auto;
+    padding: 10px 0;
+}
+.playoff-col {
+    flex: 1 1 0;
+    min-width: 200px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: stretch;
+    gap: 8px;
+}
+.playoff-stage-label {
+    font-size: 0.85em;
+    font-weight: 600;
+    color: var(--color-text-secondary);
+    text-align: center;
+    border-bottom: 1px solid var(--color-border);
+    padding-bottom: 4px;
+    margin-bottom: 4px;
+    flex-shrink: 0;
+    letter-spacing: 0.5px;
+}
+.playoff-match {
+    background: var(--color-surface-light);
+    padding: 4px 8px;
+    border-radius: 8px;
+    border-left: 3px solid var(--color-accent);
+    width: 200px;
+    flex-shrink: 0;
+    animation: slideUp 0.3s ease;
+    transition: background 0.2s;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    justify-content: center;
+    min-height: 50px;
+}
+.playoff-match .teams {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    width: 100%;
+}
+.playoff-match .team {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 2px 4px;
+    border-radius: 4px;
+    font-size: 0.85em;
+    font-weight: 400;
+    transition: background 0.2s, color 0.2s;
+    gap: 4px;
+}
+.playoff-match .team .team-logo-wrapper {
+    display: flex;
+    align-items: center;
+    flex-shrink: 0;
+}
+.playoff-match .team .team-logo-wrapper .team-logo--large {
+    width: 32px;
+    height: 32px;
+    object-fit: contain;
+}
+.playoff-match .team .team-name {
+    flex: 1;
+    text-align: center;
+    font-weight: 500;
+    white-space: nowrap;
+}
+.playoff-match .team .score {
+    font-weight: 700;
+    color: var(--color-accent);
+    min-width: 20px;
+    text-align: center;
+    font-variant-numeric: tabular-nums;
+    flex-shrink: 0;
+}
+.playoff-match .team.winner {
+    background: #1a2a1a;
+    color: var(--color-accent);
+    font-weight: 600;
+}
+.playoff-match .team.winner .team-name {
+    color: var(--color-accent);
+    font-weight: 700;
+}
+.playoff-grand {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.tournament-results {
+    margin-top: 30px;
+    display: none;
+    animation: fadeIn 0.6s ease;
+}
+.tournament-results.visible { display: block; }
+#results-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 30px;
+    margin-top: 16px;
+}
+#placements-container {
+    flex: 2;
+    min-width: 350px;
+}
+#placements-container h3 {
+    font-weight: 600;
+    color: var(--color-accent);
+    margin: 0 0 12px 0;
+}
+#placements-list {
+    font-size: 1.05em;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2px 15px;
+}
+#placements-list .placement-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 5px 8px;
+    border-bottom: 1px solid #1a1a2a;
+    font-size: 1em;
+    font-weight: 400;
+    background: transparent;
+}
+#placements-list .placement-item .place {
+    font-weight: 700;
+    color: var(--color-accent);
+    min-width: 50px;
+}
+#placements-list .placement-item .team-name {
+    color: var(--color-text);
+}
+#placements-list .placement-item.user-team .team-name {
+    color: var(--color-accent);
+    font-weight: 600;
+}
+#placements-list .placement-item.user-team {
+    background: transparent;
+    border-radius: 0;
+}
+#placements-list .placement-item.empty {
+    visibility: hidden;
+}
+.placement-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2px 15px;
+}
+#user-card-container {
+    flex: 1;
+    min-width: 320px;
+}
+#user-card-container h3 {
+    font-weight: 600;
+    color: var(--color-accent);
+    margin: 0 0 12px 0;
+}
+#user-card {
+    background: var(--color-surface-light);
+    padding: 20px;
+    border-radius: 16px;
+    border: 2px solid var(--color-accent);
+    box-shadow: 0 8px 30px rgba(231, 76, 60, 0.1);
+}
+#user-card .user-team-name {
+    font-size: 1.3em;
+    font-weight: 700;
+    color: var(--color-accent);
+    text-align: center;
+    margin-bottom: 14px;
+    letter-spacing: 0.5px;
+}
+.user-players-grid {
+    display: grid;
+    grid-template-columns: 1.5fr 2.5fr 1fr;
+    gap: 6px 12px;
+    margin-bottom: 12px;
+    font-size: 0.95em;
+}
+.user-player-row { display: contents; }
+.user-player-row .role {
+    font-weight: 500;
+    color: var(--color-text-secondary);
+    text-align: left;
+    white-space: nowrap;
+}
+.user-player-row .name {
+    font-weight: 500;
+    color: #fff;
+    text-align: left;
+}
+.user-player-row .rating {
+    font-weight: 700;
+    color: var(--color-accent);
+    text-align: right;
+}
+#user-card .user-stats {
+    margin-top: 12px;
+    padding-top: 10px;
+    border-top: 2px solid var(--color-border);
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    font-size: 0.95em;
+}
+#user-card .user-stats .stat {
+    display: flex;
+    justify-content: space-between;
+}
+#user-card .user-stats .stat .label {
+    font-weight: 400;
+    color: var(--color-text-secondary);
+}
+#user-card .user-stats .stat .value {
+    font-weight: 600;
+    color: #fff;
+}
+#user-card .user-stats .stat .value.bonus {
+    color: var(--color-accent);
+}
+#user-card .user-stats .stat .value.total {
+    color: var(--color-accent);
+    font-size: 1.1em;
+}
+#user-card .error {
+    font-weight: 400;
+    color: var(--color-danger);
+    text-align: center;
+}
+
+#team-table-container table td {
+    padding: 8px 12px;
+    background: transparent;
+}
+#team-table-container table th {
+    background: transparent;
+}
+#team-table-container .team-logo--large {
+    width: 55px;
+    height: 55px;
+    object-fit: contain;
+    display: inline-block;
+}
+.team-name-cell {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-weight: 600;
+    font-size: 1.1em;
+    color: var(--color-text);
+}
+.team-name-cell.user-team {
+    color: var(--color-warning);
+}
+.team-rating-cell {
+    font-weight: 500;
+    color: var(--color-text-muted);
+    font-size: 0.9em;
+}
+.team-rating-cell.high {
+    color: var(--color-success);
+}
+.team-players-cell {
+    font-weight: 400;
+    font-size: 0.9em;
+    color: var(--color-text-secondary);
+    margin-top: 6px;
+    padding-left: 4px;
+    border-top: 1px dashed #1a1a2a;
+    padding-top: 6px;
+}
+
+.team-logo {
+    display: inline-block;
+    vertical-align: middle;
+    flex-shrink: 0;
+    object-fit: contain;
+    background: transparent;
+}
+.team-logo--small,
+.team-logo--medium,
+.team-logo--large {
+    width: 55px;
+    height: 55px;
+}
+.team-logo--unknown {
+    background-color: #2a2a3a;
+    border: 1px solid #555;
+    border-radius: 4px;
+}
+.team-logo-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.round-cell {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 2px;
+    min-width: 50px;
+}
+.round-cell .round-score {
+    font-weight: 600;
+    font-size: 0.8em;
+    line-height: 1.2;
+}
+.round-cell .team-logo--large {
+    width: 55px;
+    height: 55px;
+    object-fit: contain;
+}
+
+/* ===== АДАПТИВНОСТЬ ===== */
+@media (max-width: 900px) {
+    .playoff-main { flex-direction: column; align-items: center; }
+    .playoff-left { width: 100%; }
+    .playoff-right { width: 100%; justify-content: center; }
+    .playoff-section-grid { flex-wrap: wrap; justify-content: flex-start; }
+    .playoff-col { flex: 0 0 160px; }
+    #group-stage-wrapper,
+    #elimination-wrapper { flex-direction: column; align-items: stretch; }
+    .group-table,
+    .elimination-bracket { flex: none; width: 100%; }
+    .matches-list,
+    .elimination-matches { flex: none; width: 100%; max-height: 400px; }
+    #results-grid { flex-direction: column; }
+    #placements-list { font-size: 1em; }
+    .user-players-grid { grid-template-columns: 1.2fr 2.2fr 1fr; gap: 4px 8px; }
+    .modal { max-width: 95%; padding: 20px; }
+    #modal-players .players-table-wrapper { flex-wrap: wrap; }
+    #modal-players .players-table-block { min-width: 150px; flex: 1 1 45%; }
+}
+@media (max-width: 800px) {
+    .main-layout { flex-direction: column; align-items: center; }
+    .pentagon-container { flex: 0 0 300px; height: 300px; }
+    .cards-grid { grid-template-columns: 1fr; }
+    .btn-big { min-width: 150px; padding: 14px 25px; }
+    #modal-players .players-table-block { min-width: 100%; flex: 1 1 100%; }
+}
+@media (max-width: 600px) {
+    .playoff-col { flex: 0 0 100%; }
+    .playoff-match { min-width: auto; }
+    .modal { max-width: 100%; padding: 15px; }
+    #modal-players .players-table-block table { font-size: 13px; }
+    #user-card-container { min-width: 100%; }
+    .user-players-grid { grid-template-columns: 1.2fr 2fr 1fr; gap: 4px 6px; font-size: 0.9em; }
+    .user-player-row .role { white-space: normal; word-break: break-word; }
+    #placements-list { grid-template-columns: 1fr; gap: 2px; }
+    #placements-list .placement-item { gap: 8px; }
+}
+
+.placement-item.user-team .team-logo--large {
+    width: 64px;
+    height: 64px;
+    object-fit: contain;
+}
+.placement-item.user-team {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: transparent;
+    border-radius: 0;
+    justify-content: center;
+}
+.placement-item.user-team .place {
+    font-weight: 700;
+    color: var(--color-accent);
+    min-width: 50px;
+    font-size: 1.1em;
+}
+.placement-item.user-team .team-name {
+    color: var(--color-accent);
+    font-weight: 700;
+    font-size: 1.1em;
+    text-align: center;
+}
+.placement-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    justify-content: center;
+}
+.placement-item .place {
+    font-weight: 700;
+    color: var(--color-accent);
+    min-width: 50px;
+}
+.placement-item .team-name {
+    color: var(--color-text);
+    text-align: center;
+}
+.user-team-header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    margin-bottom: 14px;
+}
+.user-team-header .team-logo--large {
+    width: 64px;
+    height: 64px;
+    object-fit: contain;
+    flex-shrink: 0;
+}
+.user-team-name {
+    font-size: 1.3em;
+    font-weight: 700;
+    color: var(--color-accent);
+    text-align: center;
+    letter-spacing: 0.5px;
+}
+
+.placement-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    justify-content: flex-start;
+    white-space: nowrap;
+}
+.placement-item .place {
+    font-weight: 700;
+    color: var(--color-accent);
+    min-width: 50px;
+}
+.placement-item .team-name {
+    color: var(--color-text);
+    text-align: left;
+}
+#placements-list {
+    width: 100%;
+    max-width: 800px;
+    margin: 0 auto;
+}
+.placement-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2px 15px;
+    width: 100%;
+    margin: 0 auto;
+}
+.placement-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 5px 8px;
+    border-bottom: 1px solid #1a1a2a;
+    font-size: 1em;
+    font-weight: 400;
+    background: transparent;
+    width: 100%;
+}
+.placement-item .place {
+    font-weight: 700;
+    color: var(--color-accent);
+    min-width: 50px;
+    text-align: left;
+}
+.placement-item .team-name {
+    color: var(--color-text);
+    text-align: right;
+    flex: 1;
+    margin-left: 8px;
+}
+.placement-item.user-team .team-logo--large {
+    width: 64px;
+    height: 64px;
+    object-fit: contain;
+}
+.placement-item.user-team .team-name {
+    color: var(--color-accent);
+    font-weight: 700;
+}
+.placement-item.empty {
+    visibility: hidden;
+}
+.group-table td:nth-child(3) {
+    text-align: center;
+}
+.group-table th:nth-child(3) {
+    text-align: center;
+}
+.group-table td {
+    text-align: center;
+    vertical-align: middle;
+}
+.group-table td:nth-child(2) {
+    text-align: left;
+}
+.group-table th {
+    text-align: center;
+}
+#placements-list {
+    width: 100%;
+    max-width: 800px;
+    margin: 0 auto;
+}
+.placement-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2px 15px;
+    width: 100%;
+    margin: 0 auto;
+}
+.placement-item {
+    display: flex;
+    align-items: center;
+    padding: 4px 8px;
+    border-bottom: 1px solid #1a1a2a;
+    font-size: 1em;
+    font-weight: 400;
+    background: transparent;
+    width: 100%;
+    gap: 8px;
+}
+.placement-item .place {
+    font-weight: 700;
+    color: var(--color-accent);
+    min-width: 50px;
+    text-align: left;
+    flex-shrink: 0;
+}
+.placement-item .team-logo {
+    width: 55px !important;
+    height: 55px !important;
+    object-fit: contain;
+    flex-shrink: 0;
+}
+.placement-item .team-name {
+    color: var(--color-text);
+    text-align: left;
+    flex: 1;
+    margin-left: 4px;
+}
+.placement-item.user-team .team-name {
+    color: var(--color-accent);
+    font-weight: 600;
+}
+.placement-item.user-team .team-logo {
+    width: 55px !important;
+    height: 55px !important;
+}
+.placement-item.empty {
+    visibility: hidden;
+}
+
+/* ============================================================
+   СТИЛИ ДЛЯ ДРАФТА (draft-wrapper)
+   ============================================================ */
+
+.draft-wrapper {
+    display: block;
+    font-family: 'Segoe UI', 'Arial', sans-serif;
+    color: #e8edf5;
+    background: transparent;
+}
+
+.draft-wrapper .draft-container {
+    max-width: 1400px;
+    width: 100%;
+    background: #131a24;
+    border-radius: 28px;
+    padding: 24px 28px 28px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.85);
+    border: 1px solid #2a3a4e;
+    box-sizing: border-box;
+}
+
+.draft-wrapper .draft-title {
+    font-size: 20px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: #f5c842;
+    text-align: center;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+    flex-wrap: wrap;
+}
+
+.draft-wrapper .draft-title .badge {
+    background: #1f2d3d;
+    padding: 2px 16px;
+    border-radius: 30px;
+    font-size: 13px;
+    color: #b0c4de;
+    font-weight: 400;
+}
+
+.draft-wrapper .series-control {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+    margin-bottom: 16px;
+    padding: 10px 20px;
+    background: #0f1822;
+    border-radius: 12px;
+    border: 1px solid #253244;
+    flex-wrap: wrap;
+}
+
+.draft-wrapper .series-control label {
+    font-size: 14px;
+    font-weight: 600;
+    color: #b0c4de;
+}
+
+.draft-wrapper .series-control select {
+    background: #1a2532;
+    color: #d0dcec;
+    border: 1px solid #2e4058;
+    padding: 6px 14px;
+    border-radius: 8px;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+.draft-wrapper .series-control select:hover {
+    border-color: #f5c842;
+}
+
+.draft-wrapper .series-score {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    font-size: 16px;
+    font-weight: 700;
+}
+
+.draft-wrapper .series-score .score-team {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.draft-wrapper .series-score .score-team.dire {
+    color: #e74c3c;
+}
+
+.draft-wrapper .series-score .score-team.radiant {
+    color: #4caf50;
+}
+
+.draft-wrapper .series-score .score-slots {
+    display: flex;
+    gap: 4px;
+}
+
+.draft-wrapper .series-score .score-slot {
+    width: 14px;
+    height: 14px;
+    border-radius: 4px;
+    border: 2px solid #2e4058;
+    background: transparent;
+    transition: all 0.3s;
+}
+
+.draft-wrapper .series-score .score-slot.won {
+    background: #f5c842;
+    border-color: #f5c842;
+    box-shadow: 0 0 10px rgba(245, 200, 66, 0.3);
+}
+
+.draft-wrapper .series-score .score-slot.dire-won {
+    background: #e74c3c;
+    border-color: #e74c3c;
+    box-shadow: 0 0 10px rgba(231, 76, 60, 0.3);
+}
+
+.draft-wrapper .series-score .score-slot.radiant-won {
+    background: #4caf50;
+    border-color: #4caf50;
+    box-shadow: 0 0 10px rgba(76, 175, 80, 0.3);
+}
+
+.draft-wrapper .series-score .vs {
+    color: #4a637f;
+    font-weight: 400;
+}
+
+.draft-wrapper .game-counter {
+    font-size: 13px;
+    color: #7a8aa0;
+    background: #1a2532;
+    padding: 2px 14px;
+    border-radius: 20px;
+}
+
+.draft-wrapper .progress-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #0f1822;
+    padding: 6px 16px;
+    border-radius: 40px;
+    margin-bottom: 18px;
+    border: 1px solid #253244;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
+.draft-wrapper .progress-step {
+    font-size: 13px;
+    font-weight: 600;
+    color: #7a8aa0;
+}
+
+.draft-wrapper .progress-step .highlight {
+    color: #f5c842;
+}
+
+.draft-wrapper .progress-indicator {
+    display: flex;
+    gap: 4px;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.draft-wrapper .progress-dot {
+    width: 16px;
+    height: 16px;
+    border-radius: 4px;
+    transition: all 0.3s ease;
+    border: 1px solid transparent;
+    position: relative;
+    flex-shrink: 0;
+}
+
+.draft-wrapper .progress-dot .dot-label {
+    position: absolute;
+    top: -14px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 7px;
+    color: #4a637f;
+    font-weight: 700;
+    opacity: 0;
+    transition: opacity 0.2s;
+    white-space: nowrap;
+}
+
+.draft-wrapper .progress-dot:hover .dot-label {
+    opacity: 1;
+}
+
+.draft-wrapper .progress-dot.ban {
+    background: #c0392b;
+    border-color: #c0392b;
+}
+
+.draft-wrapper .progress-dot.pick {
+    background: #d0dcec;
+    border-color: #d0dcec;
+}
+
+.draft-wrapper .progress-dot.done {
+    opacity: 1;
+    box-shadow: 0 0 8px rgba(255, 255, 255, 0.15);
+}
+
+.draft-wrapper .progress-dot.done.ban {
+    background: #e74c3c;
+    border-color: #ff6b6b;
+    box-shadow: 0 0 12px rgba(231, 76, 60, 0.4);
+}
+
+.draft-wrapper .progress-dot.done.pick {
+    background: #ffffff;
+    border-color: #ffffff;
+    box-shadow: 0 0 12px rgba(255, 255, 255, 0.3);
+}
+
+.draft-wrapper .progress-dot.future {
+    opacity: 0.25;
+    filter: saturate(0.5);
+}
+
+.draft-wrapper .progress-dot.future.ban {
+    background: #7a2a2a;
+    border-color: #5a1a1a;
+}
+
+.draft-wrapper .progress-dot.future.pick {
+    background: #4a4a5a;
+    border-color: #3a3a4a;
+}
+
+.draft-wrapper .progress-dot.active {
+    opacity: 1;
+    transform: scale(1.2);
+    box-shadow: 0 0 16px rgba(245, 200, 66, 0.5);
+    border-color: #f5c842;
+    animation: pulse-dot 1.2s ease-in-out infinite;
+}
+
+.draft-wrapper .progress-dot.active.ban {
+    background: #ff4444;
+    border-color: #ff6666;
+}
+
+.draft-wrapper .progress-dot.active.pick {
+    background: #ffffff;
+    border-color: #ffffff;
+}
+
+@keyframes pulse-dot {
+    0%, 100% { transform: scale(1.2); box-shadow: 0 0 16px rgba(245, 200, 66, 0.5); }
+    50% { transform: scale(1); box-shadow: 0 0 8px rgba(245, 200, 66, 0.2); }
+}
+
+.draft-wrapper .progress-labels {
+    display: flex;
+    gap: 12px;
+    font-size: 9px;
+    color: #6a7f9a;
+    justify-content: center;
+    padding-top: 4px;
+}
+
+.draft-wrapper .progress-labels .label-item {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.draft-wrapper .progress-labels .label-color {
+    width: 10px;
+    height: 10px;
+    border-radius: 2px;
+    display: inline-block;
+}
+
+.draft-wrapper .progress-labels .label-color.ban {
+    background: #e74c3c;
+}
+
+.draft-wrapper .progress-labels .label-color.pick {
+    background: #ffffff;
+}
+
+.draft-wrapper .team-row {
+    display: flex;
+    align-items: stretch;
+    gap: 14px;
+    margin-top: 6px;
+    padding: 12px 16px;
+    border-radius: 18px;
+    background: #101820;
+    border: 1px solid #253244;
+    min-height: 140px;
+}
+
+.draft-wrapper .team-row.top-team {
+    border-bottom: 2px solid #3f5a7a;
+}
+
+.draft-wrapper .team-row.bottom-team {
+    border-top: 2px solid #3f5a7a;
+    margin-top: 10px;
+}
+
+.draft-wrapper .team-row.user-team {
+    border-color: #f5c842;
+    box-shadow: 0 0 0 1px #f5c84255;
+}
+
+.draft-wrapper .bans-section {
+    flex: 0 0 100px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding-right: 10px;
+    border-right: 1px solid #253244;
+}
+
+.draft-wrapper .bans-label {
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: #6a7f9a;
+    font-weight: 600;
+}
+
+.draft-wrapper .ban-slots {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+}
+
+.draft-wrapper .ban-slot {
+    width: 100%;
+    height: 26px;
+    background: #1a2532;
+    border-radius: 6px;
+    border: 1px dashed #2e4058;
+    display: flex;
+    align-items: center;
+    padding: 0 6px;
+    font-size: 10px;
+    color: #4e647e;
+    transition: all 0.15s;
+    position: relative;
+}
+
+.draft-wrapper .ban-slot.filled {
+    border-style: solid;
+    border-color: #c0392b;
+    background: #1e2a38;
+    color: #e8b4b4;
+    font-weight: 500;
+}
+
+.draft-wrapper .ban-slot .ban-order {
+    font-size: 8px;
+    color: #4a637f;
+    font-weight: 700;
+    margin-right: 4px;
+}
+
+.draft-wrapper .ban-slot .ban-name {
+    font-size: 10px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.draft-wrapper .picks-section {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding: 0 6px;
+    min-width: 0;
+}
+
+.draft-wrapper .picks-label {
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: #6a7f9a;
+    font-weight: 600;
+}
+
+.draft-wrapper .picks-slots {
+    display: flex;
+    flex-wrap: nowrap;
+    gap: 6px;
+    width: 100%;
+}
+
+.draft-wrapper .pick-wrapper {
+    flex: 1 1 0;
+    min-width: 80px;
+    max-width: 170px;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+}
+
+.draft-wrapper .pick-slot {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background: rgba(0, 0, 0, 0.4);
+    border: 1px solid #2a3a5a;
+    border-radius: 6px;
+    padding: 4px 6px;
+    min-height: 65px;
+    max-height: 65px;
+    height: 65px;
+    overflow: hidden;
+    box-sizing: border-box;
+    width: 100%;
+    transition: all 0.2s;
+    justify-content: center;
+}
+
+.draft-wrapper .pick-slot.filled {
+    border-color: #f5c842;
+    background: rgba(245, 200, 66, 0.08);
+    height: 65px !important;
+}
+
+.draft-wrapper .pick-hero-name {
+    font-weight: bold;
+    color: #ffffff;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: block;
+    max-width: 100%;
+    text-align: center;
+    line-height: 1.2;
+    font-size: 10px; /* базовый, но переопределяется JS */
+}
+
+.draft-wrapper .pick-order,
+.draft-wrapper .pick-player,
+.draft-wrapper .pick-games,
+.draft-wrapper .pick-stage {
+    font-size: 8px;
+    color: #b0c4de;
+    line-height: 1.3;
+    text-align: center;
+}
+
+.draft-wrapper .pick-player {
+    color: #7ec8e3;
+}
+
+.draft-wrapper .pick-stage.Early { color: #4caf50; }
+.draft-wrapper .pick-stage.Mid { color: #ff9800; }
+.draft-wrapper .pick-stage.Late { color: #e74c3c; }
+.draft-wrapper .pick-stage.Balanced { color: #f5c842; }
+
+.draft-wrapper .pick-strong-enemies {
+    font-size: 9px;
+    color: #b0c4de;
+    margin-top: 2px;
+    padding: 1px 4px;
+    background: rgba(0, 20, 40, 0.7);
+    border-radius: 4px;
+    border-left: 2px solid #f5c842;
+    white-space: normal;
+    word-break: break-word;
+    line-height: 1.2;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.draft-wrapper .pick-strong-enemies .enemy-list {
+    color: #7ec8e3;
+    font-weight: 500;
+}
+
+.draft-wrapper .team-info {
+    flex: 0 0 200px;
+    padding-left: 12px;
+    border-left: 1px solid #253244;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 1px;
+}
+
+.draft-wrapper .team-name {
+    font-size: 16px;
+    font-weight: 800;
+    color: #f5c842;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.draft-wrapper .team-name .tag {
+    font-size: 10px;
+    font-weight: 400;
+    color: #7a8aa0;
+    background: #1f2d3d;
+    padding: 0 10px;
+    border-radius: 12px;
+}
+
+.draft-wrapper .team-name .user-badge {
+    font-size: 9px;
+    background: #f5c842;
+    color: #0b0e14;
+    padding: 0 10px;
+    border-radius: 12px;
+    font-weight: 700;
+}
+
+.draft-wrapper .team-rating {
+    font-size: 13px;
+    font-weight: 600;
+    color: #b0c4de;
+    margin-left: auto;
+    background: #1a2532;
+    padding: 2px 12px;
+    border-radius: 20px;
+    border: 1px solid #2e4058;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    line-height: 1.3;
+    min-width: 60px;
+}
+
+.draft-wrapper .team-rating .rating-value {
+    font-size: 18px;
+    color: #f5c842;
+}
+
+.draft-wrapper .team-rating .rating-label {
+    font-size: 9px;
+    color: #6a7f9a;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.draft-wrapper .team-direction {
+    font-size: 11px;
+    color: #b0c4de;
+    background: #1a2532;
+    padding: 2px 10px;
+    border-radius: 12px;
+    border: 1px solid #2e4058;
+    display: inline-block;
+    margin-top: 2px;
+}
+
+.draft-wrapper .team-direction .dir-label {
+    color: #6a7f9a;
+    margin-right: 4px;
+}
+
+.draft-wrapper .team-direction .dir-value {
+    font-weight: 600;
+}
+.draft-wrapper .team-direction .dir-value.Early { color: #f5c842; }
+.draft-wrapper .team-direction .dir-value.Mid { color: #6bcbff; }
+.draft-wrapper .team-direction .dir-value.Late { color: #ff6b6b; }
+.draft-wrapper .team-direction .dir-value.Balanced { color: #a29bfe; }
+
+.draft-wrapper .player-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+}
+
+.draft-wrapper .player-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    padding: 2px 0;
+    border-bottom: 1px solid #1a2633;
+    flex-wrap: wrap;
+}
+
+.draft-wrapper .player-item:last-child {
+    border-bottom: none;
+}
+
+.draft-wrapper .player-role {
+    font-size: 9px;
+    color: #7a8aa0;
+    width: 60px;
+    flex-shrink: 0;
+    font-weight: 500;
+    letter-spacing: 0.3px;
+}
+
+.draft-wrapper .player-name {
+    font-weight: 500;
+    color: #d0dcec;
+    font-size: 12px;
+}
+
+.draft-wrapper .player-name.highlight {
+    color: #f5c842;
+}
+
+.draft-wrapper .player-hero-pool {
+    font-size: 8px;
+    color: #6a7f9a;
+    margin-left: auto;
+    opacity: 0.7;
+}
+
+.draft-wrapper .player-item.picked {
+    opacity: 0.5;
+    text-decoration: line-through;
+}
+.draft-wrapper .player-item.picked .player-name {
+    color: #6a7f9a;
+}
+
+.draft-wrapper .action-area {
+    margin: 12px 0 8px;
+    padding: 12px 18px;
+    background: #0f1822;
+    border-radius: 16px;
+    border: 1px solid #2a3f55;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.draft-wrapper .action-header {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    flex-wrap: wrap;
+}
+
+.draft-wrapper .action-header .turn {
+    font-size: 14px;
+    font-weight: 700;
+    color: #f5c842;
+}
+
+.draft-wrapper .action-header .action-type {
+    font-size: 13px;
+    background: #1f2d3d;
+    padding: 2px 14px;
+    border-radius: 30px;
+    color: #b0c4de;
+}
+
+.draft-wrapper .action-header .action-desc {
+    font-size: 12px;
+    color: #8aa0bc;
+}
+
+.draft-wrapper .candidates {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.draft-wrapper .candidate-card {
+    background: #1a2532;
+    border: 2px solid #2e4058;
+    border-radius: 10px;
+    padding: 6px 12px;
+    cursor: pointer;
+    transition: all 0.15s;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-width: 70px;
+    font-size: 12px;
+    color: #d0dcec;
+    position: relative;
+}
+
+.draft-wrapper .candidate-card:hover {
+    border-color: #f5c842;
+    background: #1f2d3d;
+    transform: scale(1.04);
+}
+
+.draft-wrapper .candidate-card .hero-name {
+    font-weight: 600;
+}
+
+.draft-wrapper .candidate-card .hero-pool-info {
+    font-size: 9px;
+    color: #7a8aa0;
+    margin-top: 2px;
+}
+
+.draft-wrapper .candidate-card.disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+    pointer-events: none;
+}
+
+.draft-wrapper .player-select {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    justify-content: center;
+    margin-top: 4px;
+}
+
+.draft-wrapper .player-option {
+    background: #1a2532;
+    border: 1px solid #2e4058;
+    border-radius: 8px;
+    padding: 4px 12px;
+    cursor: pointer;
+    transition: all 0.15s;
+    font-size: 12px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.draft-wrapper .player-option:hover {
+    border-color: #f5c842;
+    background: #1f2d3d;
+}
+
+.draft-wrapper .player-option .games {
+    font-size: 10px;
+    color: #7ac47a;
+}
+
+.draft-wrapper .hero-tooltip {
+    position: fixed;
+    background: #0f1822;
+    border: 1px solid #3f5a7a;
+    border-radius: 10px;
+    padding: 10px 14px;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.9);
+    z-index: 9999;
+    min-width: 200px;
+    max-width: 350px;
+    pointer-events: none;
+    display: none;
+}
+
+.draft-wrapper .hero-tooltip table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 12px;
+    color: #d0dcec;
+}
+
+.draft-wrapper .hero-tooltip th {
+    text-align: left;
+    color: #f5c842;
+    font-weight: 600;
+    padding: 3px 4px;
+    border-bottom: 1px solid #253244;
+}
+
+.draft-wrapper .hero-tooltip td {
+    padding: 3px 4px;
+    border-bottom: 1px solid #1a2633;
+}
+
+.draft-wrapper .hero-tooltip .winrate {
+    font-weight: 500;
+}
+.draft-wrapper .hero-tooltip .winrate.good { color: #4caf50; }
+.draft-wrapper .hero-tooltip .winrate.bad { color: #e74c3c; }
+.draft-wrapper .hero-tooltip .player-falcons {
+    font-weight: 700;
+    color: #f5c842;
+}
+
+.draft-wrapper .controls {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    margin-top: 14px;
+    flex-wrap: wrap;
+}
+
+.draft-wrapper .btn {
+    background: #1f2d3d;
+    border: none;
+    color: #d0dcec;
+    padding: 8px 22px;
+    border-radius: 30px;
+    font-weight: 600;
+    font-size: 13px;
+    cursor: pointer;
+    transition: all 0.2s;
+    border: 1px solid #2e4058;
+    letter-spacing: 0.3px;
+}
+
+.draft-wrapper .btn:hover {
+    background: #2a3f55;
+    border-color: #4a6a8a;
+    transform: translateY(-1px);
+}
+
+.draft-wrapper .btn-primary {
+    background: #f5c842;
+    color: #0b0e14;
+    border-color: #f5c842;
+}
+
+.draft-wrapper .btn-primary:hover {
+    background: #ffd95e;
+    border-color: #ffd95e;
+}
+
+.draft-wrapper .btn-danger {
+    background: #c0392b;
+    color: #fff;
+    border-color: #c0392b;
+}
+
+.draft-wrapper .btn-danger:hover {
+    background: #e74c3c;
+    border-color: #e74c3c;
+}
+
+.draft-wrapper .btn:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+    transform: none;
+}
+
+.draft-wrapper .lanes-results {
+    margin-top: 10px;
+    padding: 8px 10px;
+    background: #0a121c;
+    border-radius: 12px;
+    border: 1px solid #1f2d3d;
+    display: none;
+    width: 100%;
+}
+
+.draft-wrapper .lanes-results.visible {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: stretch;
+    gap: 10px;
+}
+
+.draft-wrapper .lanes-list {
+    flex: 2;
+    min-width: 200px;
+}
+
+.draft-wrapper .lanes-summary {
+    flex: 0 0 auto;
+    min-width: 140px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    padding-left: 12px;
+    border-left: 1px solid #1a2633;
+    background: #0f1822;
+    border-radius: 8px;
+    padding: 8px 14px;
+}
+
+.draft-wrapper .lanes-summary .summary-label {
+    font-size: 11px;
+    color: #7a8aa0;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.draft-wrapper .lanes-summary .summary-result {
+    font-size: 16px;
+    font-weight: 700;
+}
+.draft-wrapper .lanes-summary .summary-result.win { color: #4caf50; }
+.draft-wrapper .lanes-summary .summary-result.loss { color: #e74c3c; }
+.draft-wrapper .lanes-summary .summary-result.draw { color: #f5c842; }
+.draft-wrapper .lanes-summary .summary-score {
+    font-size: 13px;
+    color: #b0c4de;
+}
+
+.draft-wrapper .lanes-results .result-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 3px 0;
+    border-bottom: 1px solid #1a2633;
+    font-size: 11px;
+    flex-wrap: wrap;
+    gap: 4px;
+}
+.draft-wrapper .lanes-results .result-row:last-child { border-bottom: none; }
+.draft-wrapper .lanes-results .lane-name {
+    color: #7a8aa0;
+    font-weight: 500;
+    min-width: 80px;
+    font-size: 11px;
+}
+.draft-wrapper .lanes-results .lane-players {
+    color: #b0c4de;
+    font-size: 10px;
+    flex: 1;
+    min-width: 100px;
+}
+.draft-wrapper .lanes-results .lane-players .dire { color: #e74c3c; }
+.draft-wrapper .lanes-results .lane-players .radiant { color: #4caf50; }
+.draft-wrapper .lanes-results .lane-result {
+    font-weight: 600;
+    white-space: nowrap;
+    font-size: 11px;
+}
+.draft-wrapper .lanes-results .lane-result.win { color: #4caf50; }
+.draft-wrapper .lanes-results .lane-result.loss { color: #e74c3c; }
+.draft-wrapper .lanes-results .lane-result.draw { color: #f5c842; }
+.draft-wrapper .lanes-results .lane-result.crush { color: #ff6b6b; }
+.draft-wrapper .lanes-results .lane-diff {
+    color: #7a8aa0;
+    font-size: 10px;
+    margin-left: 4px;
+}
+
+.draft-wrapper .game-result {
+    margin-top: 8px;
+    padding: 10px 14px;
+    background: #0f1822;
+    border-radius: 10px;
+    border: 2px solid #2a3f55;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.draft-wrapper .game-result .winner {
+    font-size: 16px;
+    font-weight: 700;
+}
+.draft-wrapper .game-result .winner.dire { color: #e74c3c; }
+.draft-wrapper .game-result .winner.radiant { color: #4caf50; }
+.draft-wrapper .game-result .time {
+    font-size: 14px;
+    color: #b0c4de;
+}
+.draft-wrapper .game-result .stage {
+    font-size: 13px;
+    color: #f5c842;
+    background: #1a2532;
+    padding: 2px 12px;
+    border-radius: 12px;
+}
+.draft-wrapper .game-result .prob {
+    font-size: 11px;
+    color: #7a8aa0;
+}
+
+.draft-wrapper .game-result .next-btn {
+    background: #f5c842;
+    color: #0b0e14;
+    border: none;
+    padding: 6px 18px;
+    border-radius: 20px;
+    font-weight: 600;
+    font-size: 13px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+.draft-wrapper .game-result .next-btn:hover {
+    background: #ffd95e;
+    transform: scale(1.05);
+}
+.draft-wrapper .game-result .next-btn.finish-btn {
+    background: #c0392b;
+    color: #fff;
+}
+.draft-wrapper .game-result .next-btn.finish-btn:hover {
+    background: #e74c3c;
+}
+
+.draft-wrapper .series-final {
+    display: none;
+    text-align: center;
+    padding: 20px;
+    margin-top: 10px;
+    background: #0f1822;
+    border-radius: 16px;
+    border: 2px solid #f5c842;
+}
+.draft-wrapper .series-final.visible { display: block; }
+.draft-wrapper .series-final .final-title {
+    font-size: 28px;
+    font-weight: 800;
+    color: #f5c842;
+    margin-bottom: 8px;
+}
+.draft-wrapper .series-final .final-score {
+    font-size: 48px;
+    font-weight: 900;
+    margin: 12px 0;
+}
+.draft-wrapper .series-final .final-score .dire { color: #e74c3c; }
+.draft-wrapper .series-final .final-score .radiant { color: #4caf50; }
+.draft-wrapper .series-final .final-score .vs {
+    color: #4a637f;
+    font-weight: 400;
+}
+.draft-wrapper .series-final .final-winner {
+    font-size: 22px;
+    font-weight: 700;
+}
+.draft-wrapper .series-final .final-winner.dire { color: #e74c3c; }
+.draft-wrapper .series-final .final-winner.radiant { color: #4caf50; }
+
+/* Блок итогов карты (game-summary-block) */
+.game-summary-block {
+    margin-top: 20px;
+    padding: 12px 20px;
+    background: rgba(0, 0, 0, 0.7);
+    border-radius: 8px;
+    border: 1px solid #f5c842;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+.summary-item {
+    font-size: 14px;
+    color: #b0c4de;
+}
+.summary-item .label {
+    font-weight: bold;
+    color: #f5c842;
+}
+.summary-item .dire { color: #e74c3c; }
+.summary-item .radiant { color: #3498db; }
+.summary-item .tie { color: #f5c842; }
+
+/* ============================================================
+   АДАПТИВНОСТЬ ДЛЯ ДРАФТА
+   ============================================================ */
+
+@media (max-width: 860px) {
+    .draft-wrapper .draft-container { padding: 12px; }
+    .draft-wrapper .team-row { flex-wrap: wrap; gap: 8px; padding: 8px; }
+    .draft-wrapper .bans-section { flex: 0 0 70px; padding-right: 4px; }
+    .draft-wrapper .ban-slot { height: 20px; font-size: 8px; }
+    .draft-wrapper .team-info { flex: 1 1 100%; border-left: none; padding-left: 0; border-top: 1px solid #253244; padding-top: 8px; }
+    .draft-wrapper .picks-section { flex: 1 1 100%; }
+    .draft-wrapper .pick-slot { min-height: 50px; max-height: 50px; height: 50px; }
+    .draft-wrapper .pick-hero-name { font-size: 9px; }
+    .draft-wrapper .pick-order, .pick-player, .pick-games, .pick-stage { font-size: 7px; }
+    .draft-wrapper .candidate-card { min-width: 56px; font-size: 10px; padding: 4px 8px; }
+    .draft-wrapper .action-header .turn { font-size: 12px; }
+    .draft-wrapper .player-role { width: 44px; font-size: 8px; }
+    .draft-wrapper .player-name { font-size: 10px; }
+    .draft-wrapper .team-name { font-size: 14px; }
+    .draft-wrapper .team-rating { font-size: 11px; min-width: 50px; }
+    .draft-wrapper .team-rating .rating-value { font-size: 15px; }
+    .draft-wrapper .progress-step { font-size: 11px; }
+    .draft-wrapper .hero-tooltip { max-width: 260px; font-size: 11px; }
+    .draft-wrapper .lanes-results .result-row { font-size: 10px; }
+    .draft-wrapper .lanes-results .lane-name { min-width: 60px; }
+    .draft-wrapper .lanes-results .lane-players { min-width: 60px; font-size: 9px; }
+    .draft-wrapper .lanes-summary { min-width: 100px; padding: 6px 10px; }
+    .draft-wrapper .lanes-summary .summary-result { font-size: 14px; }
+    .draft-wrapper .game-result { flex-direction: column; align-items: flex-start; }
+    .draft-wrapper .progress-dot { width: 12px; height: 12px; }
+    .draft-wrapper .progress-dot .dot-label { display: none; }
+    .draft-wrapper .series-score { font-size: 14px; gap: 10px; }
+    .draft-wrapper .series-score .score-slot { width: 12px; height: 12px; }
+    .draft-wrapper .series-final .final-title { font-size: 22px; }
+    .draft-wrapper .series-final .final-score { font-size: 36px; }
+}
+
+@media (max-width: 500px) {
+    .draft-wrapper .lanes-results .result-row { flex-direction: column; align-items: flex-start; }
+    .draft-wrapper .lanes-results .lane-name { min-width: auto; }
+    .draft-wrapper .lanes-results .lane-players { min-width: auto; }
+    .draft-wrapper .lanes-results.visible { flex-direction: column; }
+    .draft-wrapper .lanes-summary { border-left: none; border-top: 1px solid #1a2633; padding-left: 0; padding-top: 8px; width: 100%; align-items: center; }
+    .draft-wrapper .progress-indicator { gap: 2px; }
+    .draft-wrapper .progress-dot { width: 10px; height: 10px; border-radius: 2px; }
+    .draft-wrapper .series-score { font-size: 12px; gap: 6px; }
+    .draft-wrapper .series-score .score-slot { width: 10px; height: 10px; }
+    .draft-wrapper .series-final .final-title { font-size: 18px; }
+    .draft-wrapper .series-final .final-score { font-size: 28px; }
+    .draft-wrapper .pick-wrapper { min-width: 60px; max-width: 120px; }
+    .draft-wrapper .pick-slot { min-height: 45px; max-height: 45px; height: 45px; }
+    .draft-wrapper .pick-hero-name { font-size: 8px; }
+}
+
+.rating-detail {
+    font-size: 9px;
+    color: #6a7f9a;
+    display: block;
+    text-align: center;
+    line-height: 1.2;
+    margin-top: 2px;
+}
+
+
+.game-result-container {
+    margin-top: 20px;
+    padding: 12px 20px;
+    background: rgba(0, 0, 0, 0.7);
+    border-radius: 12px;
+    border: 2px solid #f5c842;
+}
+
+.game-result-block {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.game-result-header {
+    font-size: 18px;
+    font-weight: 700;
+    color: #f5c842;
+    text-align: center;
+}
+
+.game-result-body {
+    display: flex;
+    justify-content: center;
+    gap: 24px;
+    flex-wrap: wrap;
+    font-size: 16px;
+    font-weight: 500;
+    color: #b0c4de;
+}
+
+.game-result-body .winner {
+    font-weight: 700;
+}
+.game-result-body .winner.dire { color: #e74c3c; }
+.game-result-body .winner.radiant { color: #4caf50; }
+
+.game-result-body .time,
+.game-result-body .stage {
+    color: #b0c4de;
+}
+
+.game-result-actions {
+    display: flex;
+    justify-content: center;
+    margin-top: 6px;
+}
+.game-result-actions .next-btn {
+    background: #f5c842;
+    color: #0b0e14;
+    border: none;
+    padding: 6px 18px;
+    border-radius: 20px;
+    font-weight: 600;
+    font-size: 13px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+.game-result-actions .next-btn:hover {
+    background: #ffd95e;
+    transform: scale(1.05);
+}
+.game-result-actions .next-btn.finish-btn {
+    background: #c0392b;
+    color: #fff;
+}
+.game-result-actions .next-btn.finish-btn:hover {
+    background: #e74c3c;
+}
+
+/* Центрированный блок итога карты в action-area */
+.game-summary-center {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 12px 20px;
+    background: rgba(0, 0, 0, 0.5);
+    border-radius: 12px;
+    border: 1px solid #f5c842;
+    width: 100%;
+    text-align: center;
+    gap: 6px;
+}
+
+.game-summary-center .summary-header {
+    font-size: 18px;
+    font-weight: 700;
+    color: #f5c842;
+    letter-spacing: 0.5px;
+}
+
+.game-summary-center .summary-winner {
+    font-size: 24px;
+    font-weight: 800;
+}
+
+.game-summary-center .summary-winner.dire {
+    color: #e74c3c;
+}
+
+.game-summary-center .summary-winner.radiant {
+    color: #4caf50;
+}
+
+.game-summary-center .summary-details {
+    display: flex;
+    gap: 20px;
+    font-size: 16px;
+    color: #b0c4de;
+    margin: 4px 0;
+}
+
+.game-summary-center .summary-details .time {
+    color: #b0c4de;
+}
+
+.game-summary-center .summary-details .stage {
+    color: #f5c842;
+    font-weight: 600;
+}
+
+.game-summary-center .next-btn {
+    margin-top: 6px;
+    background: #f5c842;
+    color: #0b0e14;
+    border: none;
+    padding: 8px 28px;
+    border-radius: 30px;
+    font-weight: 600;
+    font-size: 15px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.game-summary-center .next-btn:hover {
+    background: #ffd95e;
+    transform: scale(1.04);
+}
+
+.game-summary-center .next-btn.finish-btn {
+    background: #c0392b;
+    color: #fff;
+}
+
+.game-summary-center .next-btn.finish-btn:hover {
+    background: #e74c3c;
+}
+
+/* Центрированный блок итога карты */
+.game-summary-center {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 16px 24px;
+    background: rgba(0, 0, 0, 0.6);
+    border-radius: 16px;
+    border: 2px solid #f5c842;
+    width: 100%;
+    text-align: center;
+    gap: 8px;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.5);
+}
+.game-summary-center .summary-header {
+    font-size: 20px;
+    font-weight: 700;
+    color: #f5c842;
+    letter-spacing: 0.5px;
+}
+.game-summary-center .summary-winner {
+    font-size: 28px;
+    font-weight: 800;
+}
+.game-summary-center .summary-winner.dire { color: #e74c3c; }
+.game-summary-center .summary-winner.radiant { color: #4caf50; }
+.game-summary-center .summary-details {
+    display: flex;
+    gap: 24px;
+    font-size: 16px;
+    color: #b0c4de;
+    margin: 4px 0;
+}
+.game-summary-center .summary-details .time { color: #b0c4de; }
+.game-summary-center .summary-details .stage { color: #f5c842; font-weight: 600; }
+
+.game-summary-center .summary-extra {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin-top: 6px;
+    padding-top: 10px;
+    border-top: 1px solid #2a3f55;
+}
+.game-summary-center .extra-item {
+    font-size: 14px;
+    color: #b0c4de;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 6px;
+    flex-wrap: wrap;
+}
+.game-summary-center .extra-item .label {
+    font-weight: 600;
+    color: #f5c842;
+}
+.game-summary-center .extra-item .dire { color: #e74c3c; font-weight: 700; }
+.game-summary-center .extra-item .radiant { color: #4caf50; font-weight: 700; }
+.game-summary-center .extra-item .tie { color: #f5c842; font-weight: 700; }
+.game-summary-center .extra-item .vs {
+    color: #6a7f9a;
+    font-weight: 400;
+    margin: 0 4px;
+}
+
+.game-summary-center .ratings-detail {
+    display: flex;
+    gap: 30px;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-top: 4px;
+    padding: 8px 12px;
+    background: rgba(0, 0, 0, 0.4);
+    border-radius: 8px;
+}
+.game-summary-center .team-rating-detail {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 13px;
+}
+.game-summary-center .team-rating-detail .team-name {
+    font-weight: 600;
+    color: #b0c4de;
+}
+.game-summary-center .team-rating-detail .rating-value {
+    font-weight: 700;
+    font-size: 16px;
+}
+.game-summary-center .team-rating-detail.dire .rating-value { color: #e74c3c; }
+.game-summary-center .team-rating-detail.radiant .rating-value { color: #4caf50; }
+.game-summary-center .team-rating-detail .rating-components {
+    color: #6a7f9a;
+    font-size: 12px;
+}
+
+.game-summary-center .next-btn {
+    margin-top: 8px;
+    background: #f5c842;
+    color: #0b0e14;
+    border: none;
+    padding: 8px 32px;
+    border-radius: 30px;
+    font-weight: 600;
+    font-size: 15px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+.game-summary-center .next-btn:hover {
+    background: #ffd95e;
+    transform: scale(1.04);
+}
+.game-summary-center .next-btn.finish-btn {
+    background: #c0392b;
+    color: #fff;
+}
+.game-summary-center .next-btn.finish-btn:hover {
+    background: #e74c3c;
+}
+
+/* ============================================================
+   Слоты пиков — жёсткое выравнивание (без переносов)
+   ============================================================ */
+
+.draft-wrapper .picks-section {
+    flex: 1 1 auto;
+    min-width: 0;
+}
+
+.draft-wrapper .picks-slots {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    justify-content: space-evenly;
+    gap: 6px;
+    width: 100%;
+}
+
+.draft-wrapper .pick-wrapper {
+    flex: 1 1 0;
+    min-width: 80px;
+    max-width: 160px;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+}
+
+.draft-wrapper .pick-slot {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background: rgba(0, 0, 0, 0.4);
+    border: 1px solid #2a3a5a;
+    border-radius: 6px;
+    padding: 4px 6px;
+    min-height: 65px;
+    max-height: 65px;
+    height: 65px;
+    overflow: hidden;
+    box-sizing: border-box;
+    width: 100%;
+    justify-content: center;
+}
+
+.draft-wrapper .pick-slot.filled {
+    border-color: #f5c842;
+    background: rgba(245, 200, 66, 0.08);
+}
+
+.draft-wrapper .pick-strong-enemies {
+    font-size: 9px;
+    color: #b0c4de;
+    margin-top: 2px;
+    padding: 1px 4px;
+    background: rgba(0, 20, 40, 0.7);
+    border-radius: 4px;
+    border-left: 2px solid #f5c842;
+    white-space: normal;
+    word-break: break-word;
+    line-height: 1.2;
+    width: 100%;
+    box-sizing: border-box;
+    text-align: center;
+}
+
+
+/* Дополнительные стили для компонентов шанса */
+.game-summary-center .components {
+    font-size: 13px;
+    gap: 8px;
+}
+.game-summary-center .components .positive {
+    color: #4caf50;
+}
+.game-summary-center .components .negative {
+    color: #e74c3c;
+}
+.game-summary-center .components span {
+    background: rgba(0, 0, 0, 0.3);
+    padding: 0 8px;
+    border-radius: 4px;
+}
+
+
+/* ============================================================
+   Модальное окно выбора "Пропустить / Драфтить"
+   ============================================================ */
+.draft-choice-overlay {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: rgba(0, 0, 0, 0.75);
+    z-index: 100000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    backdrop-filter: blur(6px);
+    animation: draftFadeIn 0.3s ease;
+}
+
+.draft-choice-modal {
+    background: #131a24;
+    border-radius: 28px;
+    padding: 40px 50px;
+    max-width: 520px;
+    width: 100%;
+    border: 2px solid #f5c842;
+    box-shadow: 0 30px 80px rgba(0, 0, 0, 0.9);
+    text-align: center;
+    animation: draftSlideUp 0.4s ease;
+}
+
+.draft-choice-title {
+    font-size: 28px;
+    font-weight: 800;
+    color: #f5c842;
+    letter-spacing: 1px;
+    margin-bottom: 12px;
+}
+
+.draft-choice-teams {
+    font-size: 22px;
+    font-weight: 700;
+    color: #b0c4de;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 16px;
+    margin: 20px 0 30px;
+}
+.draft-choice-teams .team-a { color: #e74c3c; }
+.draft-choice-teams .team-b { color: #4caf50; }
+.draft-choice-teams .vs {
+    color: #4a637f;
+    font-weight: 400;
+}
+
+.draft-choice-buttons {
+    display: flex;
+    gap: 16px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+.draft-choice-buttons .btn-choice {
+    font-family: 'Inter', 'Segoe UI', sans-serif;
+    font-size: 18px;
+    font-weight: 700;
+    padding: 14px 32px;
+    border: none;
+    border-radius: 60px;
+    cursor: pointer;
+    transition: all 0.25s;
+    min-width: 180px;
+    letter-spacing: 0.5px;
+}
+.draft-choice-buttons .btn-choice.skip {
+    background: transparent;
+    color: #b0c4de;
+    border: 2px solid #4a637f;
+}
+.draft-choice-buttons .btn-choice.skip:hover {
+    background: #1a2532;
+    border-color: #b0c4de;
+    transform: translateY(-3px);
+}
+.draft-choice-buttons .btn-choice.draft {
+    background: #f5c842;
+    color: #0b0e14;
+    border: 2px solid #f5c842;
+}
+.draft-choice-buttons .btn-choice.draft:hover {
+    background: #ffd95e;
+    border-color: #ffd95e;
+    transform: translateY(-3px);
+    box-shadow: 0 12px 30px rgba(245, 200, 66, 0.3);
+}
+.draft-choice-hint {
+    margin-top: 18px;
+    font-size: 14px;
+    color: #6a7f9a;
+}
+
+/* ============================================================
+   Анимации для драфта
+   ============================================================ */
+@keyframes draftFadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+@keyframes draftSlideUp {
+    from { opacity: 0; transform: translateY(40px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+@keyframes scaleIn {
+    from { transform: scale(0.9); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+}
+
+/* Кнопка "Перейти к турниру" */
+.btn-go-tournament {
+    margin-top: 20px;
+    background: linear-gradient(135deg, #f5c842, #e6b800);
+    color: #0b0e14;
+    border: none;
+    padding: 14px 44px;
+    border-radius: 60px;
+    font-weight: 700;
+    font-size: 20px;
+    cursor: pointer;
+    transition: all 0.25s;
+    box-shadow: 0 4px 20px rgba(245, 200, 66, 0.3);
+    animation: scaleIn 0.4s ease;
+}
+.btn-go-tournament:hover {
+    transform: scale(1.05);
+    box-shadow: 0 8px 30px rgba(245, 200, 66, 0.6);
+}
+
+/* Улучшенный вид карточек кандидатов */
+.draft-wrapper .candidate-card {
+    background: #1a2532;
+    border: 2px solid #2e4058;
+    border-radius: 12px;
+    padding: 10px 16px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-width: 80px;
+    font-size: 14px;
+    color: #d0dcec;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+}
+.draft-wrapper .candidate-card:hover {
+    border-color: #f5c842;
+    background: #1f2d3d;
+    transform: scale(1.05) translateY(-4px);
+    box-shadow: 0 8px 25px rgba(245, 200, 66, 0.15);
+}
+.draft-wrapper .candidate-card .hero-name {
+    font-weight: 700;
+    font-size: 16px;
+    color: #fff;
+}
+.draft-wrapper .candidate-card .hero-pool-info {
+    font-size: 11px;
+    color: #7a8aa0;
+    margin-top: 4px;
+}
+
+/* Слоты пиков — плавное появление */
+.draft-wrapper .pick-slot.filled {
+    animation: scaleIn 0.3s ease;
+}
+
+/* Стили для серии финал */
+.draft-wrapper .series-final {
+    display: none;
+    text-align: center;
+    padding: 30px 20px;
+    margin-top: 10px;
+    background: rgba(0, 0, 0, 0.7);
+    border-radius: 20px;
+    border: 2px solid #f5c842;
+    backdrop-filter: blur(4px);
+}
+.draft-wrapper .series-final.visible {
+    display: block;
+    animation: draftSlideUp 0.5s ease;
+}
+.draft-wrapper .series-final .final-title {
+    font-size: 28px;
+    font-weight: 800;
+    color: #f5c842;
+    margin-bottom: 8px;
+}
+.draft-wrapper .series-final .final-score {
+    font-size: 48px;
+    font-weight: 900;
+    margin: 12px 0;
+}
+.draft-wrapper .series-final .final-score .dire { color: #e74c3c; }
+.draft-wrapper .series-final .final-score .radiant { color: #4caf50; }
+.draft-wrapper .series-final .final-score .vs {
+    color: #4a637f;
+    font-weight: 400;
+}
+.draft-wrapper .series-final .final-winner {
+    font-size: 22px;
+    font-weight: 700;
+}
+.draft-wrapper .series-final .final-winner.dire { color: #e74c3c; }
+.draft-wrapper .series-final .final-winner.radiant { color: #4caf50; }
+
+/* Затемнение для тултипа */
+.hero-tooltip {
+    z-index: 100001 !important;
+}
+
+/* ============================================================
+   Модальное окно выбора "Пропустить / Драфтить"
+   ============================================================ */
+.draft-choice-overlay {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: rgba(0, 0, 0, 0.75);
+    z-index: 100000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    backdrop-filter: blur(6px);
+    animation: draftFadeIn 0.3s ease;
+}
+
+.draft-choice-modal {
+    background: linear-gradient(145deg, #131a24, #1a2532);
+    border-radius: 28px;
+    padding: 40px 50px;
+    max-width: 520px;
+    width: 100%;
+    border: 2px solid #f5c842;
+    box-shadow: 0 30px 80px rgba(0, 0, 0, 0.9);
+    text-align: center;
+    animation: draftSlideUp 0.4s ease;
+}
+
+.draft-choice-title {
+    font-size: 28px;
+    font-weight: 800;
+    color: #f5c842;
+    letter-spacing: 1px;
+    margin-bottom: 12px;
+}
+
+.draft-choice-teams {
+    font-size: 22px;
+    font-weight: 700;
+    color: #b0c4de;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 16px;
+    margin: 20px 0 30px;
+}
+.draft-choice-teams .team-a { color: #e74c3c; }
+.draft-choice-teams .team-b { color: #4caf50; }
+.draft-choice-teams .vs {
+    color: #4a637f;
+    font-weight: 400;
+}
+
+.draft-choice-buttons {
+    display: flex;
+    gap: 16px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+.draft-choice-buttons .btn-choice {
+    font-family: 'Inter', 'Segoe UI', sans-serif;
+    font-size: 18px;
+    font-weight: 700;
+    padding: 14px 32px;
+    border: none;
+    border-radius: 60px;
+    cursor: pointer;
+    transition: all 0.25s;
+    min-width: 180px;
+    letter-spacing: 0.5px;
+}
+.draft-choice-buttons .btn-choice.skip {
+    background: transparent;
+    color: #b0c4de;
+    border: 2px solid #4a637f;
+}
+.draft-choice-buttons .btn-choice.skip:hover {
+    background: #1a2532;
+    border-color: #b0c4de;
+    transform: translateY(-3px);
+}
+.draft-choice-buttons .btn-choice.draft {
+    background: #f5c842;
+    color: #0b0e14;
+    border: 2px solid #f5c842;
+}
+.draft-choice-buttons .btn-choice.draft:hover {
+    background: #ffd95e;
+    border-color: #ffd95e;
+    transform: translateY(-3px);
+    box-shadow: 0 12px 30px rgba(245, 200, 66, 0.3);
+}
+.draft-choice-hint {
+    margin-top: 18px;
+    font-size: 14px;
+    color: #6a7f9a;
+}
+
+/* ============================================================
+   Блок завершения драфта (кнопка "Вернуться к турниру")
+   ============================================================ */
+.draft-finish-block {
+    margin-top: 20px;
+    padding: 20px;
+    background: rgba(0, 0, 0, 0.6);
+    border-radius: 16px;
+    border: 2px solid #f5c842;
+    text-align: center;
+    animation: draftSlideUp 0.4s ease;
+}
+.finish-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+}
+.finish-title {
+    font-size: 24px;
+    font-weight: 800;
+    color: #f5c842;
+}
+.finish-result {
+    font-size: 20px;
+    font-weight: 700;
+    color: #b0c4de;
+}
+.finish-result .winner {
+    color: #4caf50;
+}
+.finish-result .score {
+    color: #f5c842;
+    margin-left: 10px;
+}
+.btn-finish-tournament {
+    font-family: 'Inter', 'Segoe UI', sans-serif;
+    font-size: 18px;
+    font-weight: 700;
+    padding: 12px 40px;
+    border: none;
+    border-radius: 60px;
+    cursor: pointer;
+    background: linear-gradient(135deg, #4caf50, #2e7d32);
+    color: #fff;
+    transition: all 0.25s;
+    margin-top: 8px;
+}
+.btn-finish-tournament:hover {
+    transform: scale(1.05);
+    box-shadow: 0 8px 30px rgba(76, 175, 80, 0.4);
+}
+
+/* ============================================================
+   Анимации для драфта
+   ============================================================ */
+@keyframes draftFadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+@keyframes draftSlideUp {
+    from { opacity: 0; transform: translateY(40px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.game-summary-center .next-btn.finish-btn {
+    background: linear-gradient(135deg, #4caf50, #2e7d32);
+    color: #fff;
+}
+.game-summary-center .next-btn.finish-btn:hover {
+    box-shadow: 0 8px 30px rgba(76, 175, 80, 0.4);
+}
+
+/* ============================================================
+   Этап на выбывание — таблица
+   ============================================================ */
+.elimination-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+.elimination-table th {
+    text-align: left;
+    padding: 8px 12px;
+    color: #f5c842;
+    border-bottom: 2px solid #f5c842;
+}
+.elimination-table td {
+    padding: 8px 12px;
+    border-bottom: 1px solid #1a2633;
+    vertical-align: middle;
+}
+.elimination-match-cell {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+.elimination-team {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 4px 8px;
+    border-radius: 4px;
+}
+.elimination-team .team-logo {
+    font-size: 18px;
+}
+.elimination-team .team-name {
+    font-weight: 500;
+}
+.elimination-team.winner {
+    background: rgba(245, 200, 66, 0.1);
+    color: #f5c842;
+    font-weight: 600;
+}
+.elimination-score-cell {
+    text-align: center;
+    font-weight: 600;
+}
+.elimination-winner-cell {
+    font-weight: 600;
+    color: #4caf50;
+}
+
+/* ============================================================
+   Плей-офф — сетка
+   ============================================================ */
+.playoff-upper-wrapper,
+.playoff-lower-wrapper,
+.playoff-grand-wrapper {
+    margin-top: 20px;
+}
+.playoff-upper-wrapper h3,
+.playoff-lower-wrapper h3,
+.playoff-grand-wrapper h3 {
+    color: #f5c842;
+    font-weight: 700;
+    font-size: 18px;
+    margin-bottom: 12px;
+    text-align: center;
+}
+.playoff-grid {
+    display: flex;
+    flex-wrap: nowrap;
+    gap: 20px;
+    overflow-x: auto;
+    padding: 10px 0;
+}
+.playoff-col {
+    flex: 1 1 0;
+    min-width: 150px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+.playoff-stage-label {
+    font-size: 13px;
+    font-weight: 600;
+    color: #b0c4de;
+    text-align: center;
+    border-bottom: 1px solid #2a3f55;
+    padding-bottom: 4px;
+    margin-bottom: 4px;
+}
+.playoff-match {
+    background: rgba(15, 24, 34, 0.8);
+    border-radius: 8px;
+    border: 1px solid #2a3f55;
+    padding: 8px 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+.playoff-match .team {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 4px 6px;
+    border-radius: 4px;
+    font-size: 14px;
+}
+.playoff-match .team .team-logo-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+.playoff-match .team .team-logo--large {
+    font-size: 20px;
+}
+.playoff-match .team .team-name {
+    flex: 1;
+    font-weight: 500;
+}
+.playoff-match .team .score {
+    font-weight: 700;
+    color: #f5c842;
+}
+.playoff-match .team.winner {
+    background: rgba(245, 200, 66, 0.08);
+    border-left: 3px solid #f5c842;
+}
+.playoff-match .team.winner .team-name {
+    color: #f5c842;
+    font-weight: 600;
+}
+.playoff-winner {
+    text-align: center;
+    font-size: 14px;
+    font-weight: 600;
+    color: #4caf50;
+    margin-top: 4px;
+    padding-top: 4px;
+    border-top: 1px solid #2a3f55;
+}
+
+.draft-choice-overlay {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: rgba(0,0,0,0.75);
+    z-index: 100000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    backdrop-filter: blur(6px);
+}
+.draft-choice-modal {
+    background: #131a24;
+    border-radius: 28px;
+    padding: 40px 50px;
+    max-width: 520px;
+    width: 100%;
+    border: 2px solid #f5c842;
+    box-shadow: 0 30px 80px rgba(0,0,0,0.9);
+    text-align: center;
+}
+.draft-choice-title {
+    font-size: 28px;
+    font-weight: 800;
+    color: #f5c842;
+}
+.draft-choice-teams {
+    font-size: 22px;
+    font-weight: 700;
+    color: #b0c4de;
+    display: flex;
+    justify-content: center;
+    gap: 16px;
+    margin: 20px 0 30px;
+}
+.draft-choice-teams .team-a { color: #e74c3c; }
+.draft-choice-teams .team-b { color: #4caf50; }
+.draft-choice-teams .vs { color: #4a637f; }
+.draft-choice-buttons {
+    display: flex;
+    gap: 16px;
+    justify-content: center;
+}
+.draft-choice-buttons .btn-choice {
+    font-family: 'Inter', sans-serif;
+    font-size: 18px;
+    font-weight: 700;
+    padding: 14px 32px;
+    border: none;
+    border-radius: 60px;
+    cursor: pointer;
+    min-width: 180px;
+}
+.draft-choice-buttons .btn-choice.skip {
+    background: transparent;
+    color: #b0c4de;
+    border: 2px solid #4a637f;
+}
+.draft-choice-buttons .btn-choice.skip:hover {
+    background: #1a2532;
+    border-color: #b0c4de;
+}
+.draft-choice-buttons .btn-choice.draft {
+    background: #f5c842;
+    color: #0b0e14;
+    border: 2px solid #f5c842;
+}
+.draft-choice-buttons .btn-choice.draft:hover {
+    background: #ffd95e;
+    box-shadow: 0 12px 30px rgba(245,200,66,0.3);
+}
+.draft-choice-hint {
+    margin-top: 18px;
+    font-size: 14px;
+    color: #6a7f9a;
+}
+
+/* ===== МОДАЛЬНОЕ ОКНО СО СПИСКОМ ИГРОКОВ – АВТО-ШИРИНА ===== */
+#modal-players .players-table-wrapper {
+    display: flex;
+    flex-wrap: wrap;          /* если блоки не помещаются – перенос */
+    gap: 16px;
+    justify-content: flex-start;
+    align-items: flex-start;
+}
+
+#modal-players .players-table-block {
+    flex: 0 0 auto;          /* ширина по содержимому */
+    min-width: 160px;        /* минимальная для читаемости */
+    max-width: 100%;
+    width: auto;
+    padding: 12px 16px;
+    background: var(--color-surface-card);
+    border-radius: 12px;
+    border: 1px solid var(--color-border);
+}
+
+#modal-players .players-table-block h4 {
+    text-align: center;
+    font-size: 1em;
+    font-weight: 600;
+    color: var(--color-accent);
+    margin: 0 0 8px 0;
+    border-bottom: 1px solid var(--color-border);
+    padding-bottom: 4px;
+}
+
+#modal-players .players-table-block table {
+    width: auto;              /* таблица занимает только нужную ширину */
+    table-layout: auto;       /* ширина колонок по содержимому */
+    border-collapse: collapse;
+    font-size: 0.95em;
+}
+
+#modal-players .players-table-block th,
+#modal-players .players-table-block td {
+    white-space: nowrap;      /* текст не переносится */
+    padding: 4px 8px;
+    text-align: left;
+}
+
+#modal-players .players-table-block th:first-child,
+#modal-players .players-table-block td:first-child {
+    text-align: center;
+    min-width: 30px;
+}
+
+#modal-players .players-table-block th:nth-child(2),
+#modal-players .players-table-block td:nth-child(2) {
+    padding-right: 20px;      /* отступ между именем и рейтингом */
+}
+
+#modal-players .players-table-block th:last-child,
+#modal-players .players-table-block td:last-child {
+    text-align: right;
+    padding-left: 8px;
+}
+
+/* Если нужно, чтобы блоки были в одной строке без переноса – раскомментируйте */
+
+#modal-players .players-table-wrapper {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+}
+
+/* ===== МОДАЛЬНОЕ ОКНО – РАСШИРЕННОЕ ===== */
+.modal-overlay .modal {
+    max-width: 1400px;       /* увеличиваем максимальную ширину */
+    padding: 20px 30px;
+    overflow-x: hidden;      /* отключаем горизонтальный скролл у модалки */
+}
+
+/* Контейнер с блоками ролей – занимает всю ширину */
+#modal-players .players-table-wrapper {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    justify-content: flex-start;
+    align-items: stretch;
+    width: 100%;
+}
+
+/* Каждый блок с ролью – адаптивная ширина */
+#modal-players .players-table-block {
+    flex: 1 1 auto;          /* занимает доступное место, но не меньше min-width */
+    min-width: 140px;
+    max-width: 100%;
+    background: var(--color-surface-card);
+    border-radius: 12px;
+    border: 1px solid var(--color-border);
+    padding: 10px 14px;
+    box-sizing: border-box;
+}
+
+/* Заголовок роли */
+#modal-players .players-table-block h4 {
+    font-size: 1em;
+    font-weight: 600;
+    color: var(--color-accent);
+    text-align: center;
+    margin: 0 0 6px 0;
+    border-bottom: 1px solid var(--color-border);
+    padding-bottom: 4px;
+}
+
+/* Таблица внутри блока – подстраивается под ширину блока */
+#modal-players .players-table-block table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.9em;
+}
+
+#modal-players .players-table-block th,
+#modal-players .players-table-block td {
+    white-space: nowrap;      /* текст в одной строке */
+    padding: 3px 6px;
+    text-align: left;
+}
+
+#modal-players .players-table-block th:first-child,
+#modal-players .players-table-block td:first-child {
+    text-align: center;
+    min-width: 28px;
+}
+
+#modal-players .players-table-block th:last-child,
+#modal-players .players-table-block td:last-child {
+    text-align: right;
+    padding-left: 10px;
+}
+
+/* Имя игрока – может быть длинным, но без переноса */
+#modal-players .players-table-block .player-name {
+    font-weight: 500;
+    color: #fff;
+}
+
+/* Рейтинг – красный акцент */
+#modal-players .players-table-block .player-rating {
+    font-weight: 600;
+    color: var(--color-accent);
+}
+
+/* Если блоки не помещаются в одну строку, они переносятся на следующую */
+/* Модальное окно – на всю ширину */
+.modal-overlay .modal {
+    max-width: 100%;
+    width: 100%;
+    padding: 20px 30px;
+    overflow-x: hidden;
+    box-sizing: border-box;
+}
+
+/* Контейнер блоков – без переноса, с прокруткой при необходимости */
+#modal-players .players-table-wrapper {
+    display: flex;
+    flex-wrap: nowrap;           /* не переносим */
+    gap: 12px;
+    overflow-x: auto;           /* скролл внутри, если не хватает */
+    padding-bottom: 4px;        /* чтобы скролл не перекрывал */
+    width: 100%;
+    box-sizing: border-box;
+}
+
+/* Каждый блок – подстраивается по содержимому, но не меньше */
+#modal-players .players-table-block {
+    flex: 0 0 auto;            /* ширина по содержимому */
+    min-width: 130px;
+    background: var(--color-surface-card);
+    border-radius: 12px;
+    border: 1px solid var(--color-border);
+    padding: 8px 12px;
+    box-sizing: border-box;
+}
+
+/* Остальные стили как раньше */
+#modal-players .players-table-block h4 {
+    font-size: 0.9em;
+    font-weight: 600;
+    color: var(--color-accent);
+    text-align: center;
+    margin: 0 0 4px 0;
+    border-bottom: 1px solid var(--color-border);
+    padding-bottom: 3px;
+}
+
+#modal-players .players-table-block table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.85em;
+}
+
+#modal-players .players-table-block th,
+#modal-players .players-table-block td {
+    white-space: nowrap;
+    padding: 2px 4px;
+    text-align: left;
+}
+
+#modal-players .players-table-block th:first-child,
+#modal-players .players-table-block td:first-child {
+    text-align: center;
+    min-width: 24px;
+}
+
+#modal-players .players-table-block th:last-child,
+#modal-players .players-table-block td:last-child {
+    text-align: right;
+    padding-left: 8px;
+}
+
+#modal-players .players-table-block .player-name {
+    font-weight: 500;
+    color: #fff;
+}
+
+#modal-players .players-table-block .player-rating {
+    font-weight: 600;
+    color: var(--color-accent);
+}
+
+#modal-players .modal {
+    width: 1300px;
+    max-width: 96vw;
+}
+
+
+/* ============================================================
+   ПЛЕЙ-ОФФ – единая цветовая гамма (чёрный + красный)
+   ============================================================ */
+
+/* Общий контейнер плей-офф */
+#playoff-wrapper {
+    background: transparent;
+    padding: 10px 0;
+}
+
+#playoff-wrapper h3 {
+    color: var(--color-accent);
+    font-weight: 700;
+    text-align: center;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    border-bottom: 2px solid var(--color-accent);
+    padding-bottom: 8px;
+    margin-bottom: 16px;
+}
+
+#playoff-wrapper h4 {
+    color: var(--color-accent);
+    font-weight: 600;
+    border-bottom: 2px solid var(--color-accent);
+    padding-bottom: 4px;
+    margin-bottom: 10px;
+    display: inline-block;
+}
+
+.playoff-main {
+    background: rgba(10, 10, 15, 0.6);
+    border: 1px solid var(--color-border);
+    border-radius: 16px;
+    padding: 20px;
+    backdrop-filter: blur(4px);
+}
+
+.playoff-stage-label {
+    color: var(--color-text-secondary);
+    border-bottom: 2px solid var(--color-accent);
+    font-weight: 600;
+    letter-spacing: 0.5px;
+}
+
+.playoff-match {
+    background: rgba(15, 24, 34, 0.85);
+    border: 1px solid var(--color-border);
+    border-radius: 10px;
+    transition: border-color 0.3s, transform 0.3s, box-shadow 0.3s;
+}
+
+.playoff-match:hover {
+    border-color: var(--color-accent);
+    box-shadow: 0 8px 24px rgba(231, 76, 60, 0.15);
+}
+
+.playoff-match .team .team-name {
+    color: var(--color-text);
+}
+
+.playoff-match .team .score {
+    color: var(--color-accent);
+    font-weight: 700;
+}
+
+.playoff-match .team.winner {
+    background: rgba(231, 76, 60, 0.12);
+    border-left: 3px solid var(--color-accent);
+}
+
+.playoff-match .team.winner .team-name {
+    color: var(--color-accent);
+    font-weight: 700;
+}
+
+.playoff-grand {
+    background: rgba(15, 24, 34, 0.7);
+    border: 1px solid var(--color-accent);
+    border-radius: 12px;
+}
+
+.playoff-grand h4 {
+    color: var(--color-accent);
+    border-bottom: 2px solid var(--color-accent);
+}
+
+/* Окно выбора драфта */
+.draft-choice-modal {
+    background: rgba(10, 10, 15, 0.92) !important;
+    border: 1px solid var(--color-accent) !important;
+    border-radius: 16px !important;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.7) !important;
+    backdrop-filter: blur(4px) !important;
+}
+
+.draft-choice-modal .draft-choice-title {
+    color: var(--color-accent);
+}
+
+.draft-choice-modal .draft-choice-teams .team-a {
+    color: var(--color-accent);
+}
+
+.draft-choice-modal .draft-choice-teams .team-b {
+    color: #4caf50; /* зелёный для второй команды, можно оставить или заменить на другой акцент */
+}
+
+.draft-choice-modal .btn-choice.skip {
+    border-color: #555;
+    color: var(--color-text-secondary);
+}
+
+.draft-choice-modal .btn-choice.skip:hover {
+    border-color: var(--color-text);
+    background: rgba(255,255,255,0.05);
+    color: #fff;
+}
+
+.draft-choice-modal .btn-choice.draft {
+    border-color: var(--color-accent);
+    background: var(--color-accent);
+    color: #fff;
+}
+
+.draft-choice-modal .btn-choice.draft:hover {
+    background: var(--color-accent-hover);
+    border-color: var(--color-accent-hover);
+    box-shadow: 0 4px 16px rgba(231, 76, 60, 0.3);
+}
+
+.draft-choice-modal .draft-choice-hint {
+    color: var(--color-text-muted);
+}
+
+/* ============================================================
+   ПЛЕЙ-ОФФ И РЕЗУЛЬТАТЫ – единый стиль с групповым этапом
+   ============================================================ */
+
+/* Контейнеры плей-офф и результатов */
+#playoff-wrapper,
+.tournament-results {
+    background: transparent;
+    padding: 16px;
+    border-radius: 16px;
+    border: 1px solid var(--color-border);
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+}
+
+/* Заголовки – красный акцент, как в групповом этапе */
+#playoff-wrapper h3,
+.tournament-results h2 {
+    color: var(--color-accent);
+    font-weight: 700;
+    text-align: center;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    border-bottom: 2px solid var(--color-accent);
+    padding-bottom: 8px;
+    margin-bottom: 16px;
+}
+
+#playoff-wrapper h4,
+#playoff-wrapper .playoff-section h4 {
+    color: var(--color-accent);
+    font-weight: 600;
+    border-bottom: 2px solid var(--color-accent);
+    padding-bottom: 4px;
+    margin-bottom: 10px;
+    display: inline-block;
+}
+
+/* Основной контейнер плей-офф – прозрачный, как групповой этап */
+.playoff-main {
+    background: transparent;
+    border: none;
+    padding: 0;
+    backdrop-filter: none;
+}
+
+/* Секции плей-офф */
+.playoff-section {
+    background: transparent;
+    padding: 0;
+    margin-bottom: 20px;
+}
+
+/* Сетка плей-офф */
+.playoff-section-grid {
+    display: flex;
+    flex-wrap: nowrap;
+    gap: 20px;
+    justify-content: flex-start;
+    overflow-x: auto;
+    padding: 55px 0;
+}
+
+.playoff-col {
+    flex: 0 0 auto;
+    min-width: 200px;
+    max-width: 220px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+/* Названия стадий */
+.playoff-stage-label {
+    font-size: 0.85em;
+    font-weight: 600;
+    color: var(--color-text-secondary);
+    text-align: center;
+    border-bottom: 2px solid var(--color-accent);
+    padding-bottom: 4px;
+    margin-bottom: 6px;
+    letter-spacing: 0.5px;
+}
+
+/* Карточка матча – лёгкий полупрозрачный фон, как у элементов групповой таблицы */
+.playoff-match {
+    background: rgba(0, 0, 0, 0.25);
+    border: 1px solid var(--color-border);
+    border-radius: 10px;
+    padding: 8px 12px;
+    transition: border-color 0.3s, transform 0.3s, box-shadow 0.3s;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+}
+
+.playoff-match:hover {
+    border-color: var(--color-accent);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(231, 76, 60, 0.15);
+}
+
+.playoff-match .teams {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.playoff-match .team {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 4px 6px;
+    border-radius: 6px;
+    font-size: 0.9em;
+    font-weight: 400;
+    transition: background 0.2s, color 0.2s;
+    gap: 6px;
+}
+
+.playoff-match .team .team-name {
+    flex: 1;
+    text-align: left;
+    font-weight: 500;
+    color: var(--color-text);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.playoff-match .team .score {
+    font-weight: 700;
+    color: var(--color-accent);
+    min-width: 20px;
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+}
+
+.playoff-match .team.winner {
+    background: rgba(231, 76, 60, 0.12);
+    border-radius: 6px;
+    border-left: 3px solid var(--color-accent);
+}
+
+.playoff-match .team.winner .team-name {
+    color: var(--color-accent);
+    font-weight: 700;
+}
+
+/* Гранд-финал */
+.playoff-grand {
+    background: rgba(0, 0, 0, 0.25);
+    border: 1px solid var(--color-accent);
+    border-radius: 12px;
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-width: 180px;
+}
+
+.playoff-grand h4 {
+    color: var(--color-accent);
+    border-bottom: 2px solid var(--color-accent);
+    padding-bottom: 6px;
+    margin-bottom: 10px;
+    text-align: center;
+}
+
+/* Результаты турнира (места) */
+.tournament-results {
+    margin-top: 30px;
+}
+
+#placements-list .placement-item {
+    background: transparent;
+    border-bottom: 1px solid var(--color-border);
+}
+
+#user-card {
+    background: rgba(0, 0, 0, 0.25);
+    border: 1px solid var(--color-border);
+    border-radius: 16px;
+    padding: 20px;
+}
+
+#user-card .user-team-name {
+    color: var(--color-accent);
+}
+
+/* Окно выбора драфта – в углу, без затемнения */
+.draft-choice-modal {
+    background: rgba(10, 10, 15, 0.92) !important;
+    border: 1px solid var(--color-accent) !important;
+    border-radius: 16px !important;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.7) !important;
+    backdrop-filter: blur(4px) !important;
+}
+
+.draft-choice-modal .draft-choice-title {
+    color: var(--color-accent);
+}
+
+.draft-choice-modal .draft-choice-teams .team-a {
+    color: var(--color-accent);
+}
+
+.draft-choice-modal .draft-choice-teams .team-b {
+    color: #4caf50;
+}
+
+.draft-choice-modal .btn-choice.skip {
+    border-color: #555;
+    color: var(--color-text-secondary);
+}
+
+.draft-choice-modal .btn-choice.skip:hover {
+    border-color: var(--color-text);
+    background: rgba(255,255,255,0.05);
+    color: #fff;
+}
+
+.draft-choice-modal .btn-choice.draft {
+    border-color: var(--color-accent);
+    background: var(--color-accent);
+    color: #fff;
+}
+
+.draft-choice-modal .btn-choice.draft:hover {
+    background: var(--color-accent-hover);
+    border-color: var(--color-accent-hover);
+    box-shadow: 0 4px 16px rgba(231, 76, 60, 0.3);
+}
+
+.draft-choice-modal .draft-choice-hint {
+    color: var(--color-text-muted);
+}
+
+/* Адаптивность */
+@media (max-width: 860px) {
+    .playoff-main {
+        flex-direction: column;
+        align-items: center;
+    }
+    .playoff-right {
+        width: 100%;
+    }
+    .playoff-grand {
+        min-width: unset;
+        width: 100%;
+    }
+    .playoff-section-grid {
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+    .playoff-col {
+        flex: 0 0 150px;
+    }
+}
+
+.playoff-section-grid {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 24px;          /* было 12px – увеличили */
+    justify-content: flex-start;
+    align-items: stretch;
+}
+
+
+.playoff-left {
+    flex: 0 1 70%;          /* не растёт, может сжиматься, базовый размер 70% */
+    max-width: 80%;         /* жёсткое ограничение */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 20px;
+    min-width: 300px;       /* чтобы не сжимался слишком сильно */
+}
+
+.playoff-right {
+    flex: 0 1 30%;          /* занимает оставшиеся 30% */
+    min-width: 250px;
+}
+
+
+/* ============================================================
+   Свечение карточек кандидатов в драфте
+   ============================================================ */
+
+/* Анимации пульсации */
+@keyframes glow-ban {
+    0%   { box-shadow: 0 0 15px rgba(231, 76, 60, 0.3), inset 0 0 15px rgba(231, 76, 60, 0.1); }
+    50%  { box-shadow: 0 0 30px rgba(231, 76, 60, 0.7), inset 0 0 30px rgba(231, 76, 60, 0.25); }
+    100% { box-shadow: 0 0 15px rgba(231, 76, 60, 0.3), inset 0 0 15px rgba(231, 76, 60, 0.1); }
+}
+@keyframes glow-pick {
+    0%   { box-shadow: 0 0 15px rgba(255, 255, 255, 0.3), inset 0 0 15px rgba(255, 255, 255, 0.1); }
+    50%  { box-shadow: 0 0 30px rgba(255, 255, 255, 0.7), inset 0 0 30px rgba(255, 255, 255, 0.25); }
+    100% { box-shadow: 0 0 15px rgba(255, 255, 255, 0.3), inset 0 0 15px rgba(255, 255, 255, 0.1); }
+}
+
+/* Классы для банов и пиков */
+.candidate-card.ban {
+    border-color: #e74c3c;
+    animation: glow-ban 1.8s infinite ease-in-out;
+}
+
+.candidate-card.pick {
+    border-color: #ffffff;
+    animation: glow-pick 1.8s infinite ease-in-out;
+}
+
+/* Усиление свечения при наведении */
+.candidate-card.ban:hover {
+    box-shadow: 0 0 40px rgba(231, 76, 60, 0.9), inset 0 0 40px rgba(231, 76, 60, 0.3);
+    transform: scale(1.05) translateY(-4px);
+    border-color: #ff6b6b;
+}
+
+.candidate-card.pick:hover {
+    box-shadow: 0 0 40px rgba(255, 255, 255, 0.9), inset 0 0 40px rgba(255, 255, 255, 0.3);
+    transform: scale(1.05) translateY(-4px);
+    border-color: #ffffff;
+}
+
+/* Цветовая индикация игроков в тултипе драфта */
+.hero-tooltip .ally {
+    color: #4caf50;  /* зелёный для союзников */
+    font-weight: 600;
+}
+
+.hero-tooltip .enemy {
+    color: #e74c3c;  /* красный для противников */
+    font-weight: 600;
+}
+
+/* Цвета игроков в тултипе драфта */
+.player-ally {
+    color: #4caf50 !important;  /* зелёный – союзники */
+    font-weight: 700;
+}
+.player-enemy {
+    color: #e74c3c !important;  /* красный – противники */
+    font-weight: 700;
+}
+
+
+/* ===== ТУЛТИП – ПРОЗРАЧНЫЙ РАЗМЫТЫЙ ФОН ===== */
+.hero-tooltip {
+    background: rgba(10, 10, 15, 0.65) !important;
+    backdrop-filter: blur(12px) !important;
+    -webkit-backdrop-filter: blur(12px) !important;
+    border: 1px solid rgba(255, 255, 255, 0.12) !important;
+    color: #e8edf5;
+    font-family: 'Inter', 'Segoe UI', sans-serif;
+}
+
+/* Стили для содержимого тултипа (уже есть, но можно уточнить) */
+.hero-tooltip table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+}
+
+.hero-tooltip th {
+    text-align: left;
+    color: #f5c842;
+    font-weight: 600;
+    padding: 4px 6px;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+
+.hero-tooltip td {
+    padding: 4px 6px;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+}
+
+.hero-tooltip .winrate.good {
+    color: #4caf50;
+}
+
+.hero-tooltip .winrate.bad {
+    color: #e74c3c;
+}
+
+.hero-tooltip .player-ally {
+    color: #4caf50 !important;
+    font-weight: 700;
+}
+
+.hero-tooltip .player-enemy {
+    color: #e74c3c !important;
+    font-weight: 700;
+}
+
+/* ===== НОВЫЙ ДИЗАЙН СЛОТА ПИКА ===== */
+.draft-wrapper .pick-slot {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0, 0, 0, 0.4);
+    border: 1px solid #2a3a5a;
+    border-radius: 6px;
+    padding: 4px 6px;
+    min-height: 75px;
+    max-height: 75px;
+    height: 75px;
+    overflow: hidden;
+    box-sizing: border-box;
+    width: 100%;
+    transition: all 0.2s;
+}
+
+.pick-player-row {
+    display: flex;
+    gap: 6px;
+    align-items: center;
+    font-size: 10px;
+    justify-content: center;
+    width: 100%;
+}
+.pick-player-name {
+    font-weight: 500;
+    color: #d0dcec;
+}
+.pick-player-role {
+    color: #6a7f9a;
+    font-weight: 400;
+}
+.pick-hero-name {
+    font-weight: 700;
+    font-size: 14px;
+    color: #fff;
+    text-align: center;
+    line-height: 1.2;
+    margin: 2px 0;
+}
+.pick-stats-row {
+    display: flex;
+    gap: 8px;
+    justify-content: center;
+    font-size: 9px;
+    color: #b0c4de;
+}
+.pick-games, .pick-winrate {
+    color: #b0c4de;
+}
+.pick-stage {
+    font-weight: 600;
+    padding: 0 6px;
+    border-radius: 10px;
+    background: var(--color-border);
+    color: var(--color-text-secondary);
+    font-size: 9px;
+}
+.pick-stage.Early { background: #e67e22; color: #fff; }
+.pick-stage.Mid { background: #f1c40f; color: #000; }
+.pick-stage.Late { background: #2ecc71; color: #000; }
+.pick-stage.Balanced { background: #f5c842; color: #000; }
+
+/* Убираем старые элементы, которые больше не используются */
+.pick-order, .pick-player, .pick-games-old {
+    display: none;
+}
+
+/* Направленность (стадия) – без фона, только цвет текста */
+.pick-stage {
+    font-weight: 600;
+    padding: 0 4px;
+    border-radius: 0;
+    font-size: 9px;
+    background: transparent !important;
+    color: #b0c4de; /* базовый цвет */
+    text-shadow: 0 0 4px rgba(0, 0, 0, 0.6);
+}
+
+.pick-stage.Early {
+    color: #e67e22; /* оранжевый */
+}
+
+.pick-stage.Mid {
+    color: #f1c40f; /* жёлтый */
+}
+
+.pick-stage.Late {
+    color: #2ecc71; /* зелёный */
+}
+
+.pick-stage.Balanced {
+    color: #f5c842; /* золотой */
+}
+
+.pick-stage {
+    background: rgba(0, 0, 0, 0.3) !important;
+    padding: 1px 6px;
+    border-radius: 10px;
+}
+
+/* Явно задаём одинаковый размер шрифта для всех элементов статистики */
+.pick-games,
+.pick-winrate,
+.pick-stage {
+    font-size: 9px !important; /* !important – чтобы переопределить возможные конфликты */
+    line-height: 1.4;
+}
+
+/* ===== МОДАЛКА ТИММЕЙТОВ – ПРОЗРАЧНЫЙ РАЗМЫТЫЙ ФОН ===== */
+
+/* ===== МОДАЛКА ТИММЕЙТОВ – ПРОЗРАЧНЫЙ РАЗМЫТЫЙ ФОН (ТОЛЬКО У МОДАЛКИ) ===== */
+
+/* Оверлей – затемнение без размытия */
+#teammates-modal.modal-overlay {
+    background: rgba(0, 0, 0, 0.4) !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+/* Сама модалка – стеклянный эффект */
+#teammates-modal .modal.teammates-modal-content {
+    background: rgba(10, 10, 15, 0.55) !important;
+    backdrop-filter: blur(20px) !important;
+    -webkit-backdrop-filter: blur(20px) !important;
+    border: 1px solid rgba(255, 255, 255, 0.08) !important;
+    box-shadow: 0 8px 40px rgba(0, 0, 0, 0.6) !important;
+    width: auto !important;
+    max-width: 90vw !important;
+    min-width: 320px;
+    padding: 28px 32px;
+    border-radius: 20px;
+    max-height: 80vh;
+    overflow-y: auto;
+}
+
+/* Остальные стили (заголовок, таблица, кнопка) остаются без изменений */
+
+/* Заголовок */
+#teammates-modal .modal h2 {
+    color: var(--color-accent);
+    font-weight: 700;
+    font-size: 1.6em;
+    margin-bottom: 16px;
+    text-align: center;
+}
+
+/* Кнопка закрытия */
+#teammates-modal .modal-close {
+    color: #b0c4de;
+    font-size: 28px;
+    transition: color 0.2s;
+}
+#teammates-modal .modal-close:hover {
+    color: var(--color-accent);
+}
+
+/* Таблица – компактная, без лишних отступов */
+#teammates-modal .modal table {
+    width: auto;
+    border-collapse: collapse;
+    font-size: 14px;
+    color: var(--color-text);
+    margin: 0 auto;
+}
+#teammates-modal .modal table th {
+    font-weight: 600;
+    color: var(--color-accent);
+    border-bottom: 2px solid var(--color-accent);
+    padding: 6px 10px;
+    text-align: left;
+}
+#teammates-modal .modal table td {
+    padding: 5px 10px;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+}
+#teammates-modal .modal table .player-name {
+    font-weight: 500;
+    color: #fff;
+}
+#teammates-modal .modal table .role {
+    color: var(--color-text-secondary);
+}
+#teammates-modal .modal table td:last-child {
+    font-weight: 600;
+}
+#teammates-modal .modal .no-data {
+    color: var(--color-text-muted);
+    text-align: center;
+    font-size: 1.1em;
+    padding: 20px 0;
+}

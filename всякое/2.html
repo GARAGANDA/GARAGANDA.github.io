@@ -1,0 +1,644 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Фильтр дуо по списку игроков</title>
+    <style>
+        * { box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            max-width: 1200px;
+            margin: 20px auto;
+            padding: 0 20px;
+            background: #f5f7fa;
+            color: #2c3e50;
+        }
+        h1 {
+            text-align: center;
+            margin-bottom: 10px;
+        }
+        .subtitle {
+            text-align: center;
+            color: #7f8c8d;
+            margin-bottom: 30px;
+        }
+        .controls {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        .controls > div {
+            flex: 1 1 250px;
+        }
+        .controls label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+        .controls input[type="file"],
+        .controls textarea {
+            width: 100%;
+            padding: 8px 10px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            font-size: 14px;
+            font-family: inherit;
+        }
+        .controls textarea {
+            height: 100px;
+            resize: vertical;
+        }
+        .controls button {
+            padding: 10px 25px;
+            background: #3498db;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 15px;
+            transition: background 0.2s;
+            margin-top: 5px;
+        }
+        .controls button:hover {
+            background: #2980b9;
+        }
+        .controls button.success {
+            background: #2ecc71;
+        }
+        .controls button.success:hover {
+            background: #27ae60;
+        }
+        .controls button.danger {
+            background: #e74c3c;
+        }
+        .controls button.danger:hover {
+            background: #c0392b;
+        }
+        .stats {
+            font-size: 15px;
+            margin-top: 10px;
+            font-weight: 500;
+        }
+        .table-container {
+            overflow-x: auto;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            margin: 20px 0;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 14px;
+        }
+        table th {
+            background: #34495e;
+            color: white;
+            padding: 12px 15px;
+            text-align: left;
+            position: sticky;
+            top: 0;
+            z-index: 2;
+        }
+        table td {
+            padding: 10px 15px;
+            border-bottom: 1px solid #ecf0f1;
+        }
+        table tr:hover {
+            background: #f1f9ff;
+        }
+        .no-data {
+            text-align: center;
+            padding: 40px;
+            color: #95a5a6;
+        }
+        .csv-output {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            padding: 20px;
+            margin-top: 20px;
+        }
+        .csv-output textarea {
+            width: 100%;
+            height: 200px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            padding: 10px;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            resize: vertical;
+            box-sizing: border-box;
+        }
+        .copy-section {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            margin-top: 10px;
+        }
+        .copy-status {
+            color: #27ae60;
+            font-weight: 500;
+        }
+        .player-count-badge {
+            display: inline-block;
+            background: #ecf0f1;
+            padding: 2px 12px;
+            border-radius: 20px;
+            font-size: 13px;
+            margin-left: 10px;
+        }
+        @media (max-width: 600px) {
+            .controls > div {
+                flex: 1 1 100%;
+            }
+        }
+        .file-input-wrapper {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+        .file-input-wrapper input[type="file"] {
+            flex: 1;
+        }
+        .file-input-wrapper button {
+            flex-shrink: 0;
+        }
+        .badge {
+            background: #3498db;
+            color: white;
+            border-radius: 20px;
+            padding: 2px 12px;
+            font-size: 13px;
+            margin-left: 8px;
+        }
+        .badge-filtered {
+            background: #2ecc71;
+        }
+    </style>
+</head>
+<body>
+
+<h1>🔍 Фильтр дуо по списку игроков</h1>
+<p class="subtitle">Оставляет только те пары, где оба игрока присутствуют в указанном списке (из ratings.js)</p>
+
+<div class="controls">
+    <div>
+        <label for="csvFile">📁 Загрузить CSV с дуо</label>
+        <input type="file" id="csvFile" accept=".csv">
+        <div style="margin-top:8px; font-size:13px; color:#7f8c8d;">Ожидается столбец "2-Player Squad", "Games", "W", "L", "Win %"</div>
+    </div>
+    <div>
+        <label for="playerList">👥 Список игроков (по одному на строку)</label>
+        <textarea id="playerList" placeholder="Вставьте имена игроков из ratings.js...">Yatoro
+Satanic
+Miracle-
+MiCKe
+DyrachYO
+Ame
+Pure
+RAMZES666
+skiter
+Nightfall
+Watson
+XBOCT
+Arteezy
+Crystallis
+Parker
+Timado
+Monet
+TA2000
+23savage
+MATUMBAMAN
+Kiritych~
+Smiling Knight
+Shiro
+gotthejuice
+Pakazs
+Nisha
+Malr1ne
+Gpk
+bzm
+Noone
+Larl
+SumaiL
+NothingToSay
+CHIRA JUNIOR
+Quinn
+kiyotaka
+MidOne
+Dendi
+Abed
+Lorenof
+Yopaj
+Darkmago
+4nalog
+Topson
+Stormstormer
+W33
+ATF
+Collapse
+Zai
+MinD ContRoL
+S4
+Faith bian
+33
+DM
+Ace
+Daxak
+MieRo'
+Resolut1on
+TORONTOTOKYO
+Funn1k
+SabeRLight-
+Noticed
+Wisper
+BOOM
+No!ob
+Jabz
+Davai Lama
+YapzOr
+Save-
+Nine
+Cr1t-
+9Class
+tOfu
+Boxi
+XinQ
+GH
+Saksa
+rue
+Mira
+RodjER
+Zayac
+Antares
+Thiolicor
+Tims
+Scofield
+OmaR
+PlAnet
+Puppey
+KuroKy
+Sneyking
+Miposhka
+Solo
+INSaNiA
+Y`
+Ppd
+Whitemon
+Kataomi
+Seleri
+Dukalis
+Kaori
+Malady
+Fly
+SoNNeikO
+Tobi
+XNova
+Matthew
+Fng
+pantomem
+Jaunuel</textarea>
+        <div style="margin-top:5px;">
+            <button id="loadPlayersBtn" class="success" style="padding:6px 15px; font-size:13px;">📥 Загрузить из ratings.js</button>
+            <span style="margin-left:10px; font-size:13px; color:#7f8c8d;">(загрузите файл ratings.js)</span>
+        </div>
+        <div id="playerCount" class="stats" style="margin-top:5px;">Загружено: <span id="playerCountNum">0</span> игроков</div>
+    </div>
+    <div style="display: flex; flex-direction: column; justify-content: flex-end;">
+        <button id="filterBtn">🔎 Отфильтровать</button>
+        <div id="filterStats" class="stats">Всего дуо: <span id="totalDuo">0</span> | Осталось: <span id="filteredDuo">0</span></div>
+    </div>
+</div>
+
+<div class="table-container" id="tableContainer">
+    <div class="no-data">Загрузите CSV и нажмите "Отфильтровать"</div>
+</div>
+
+<div class="csv-output">
+    <h3>📋 Итоговый CSV (отфильтрованный)</h3>
+    <textarea id="csvResult" readonly placeholder="Здесь появится CSV..."></textarea>
+    <div class="copy-section">
+        <button id="copyBtn" class="success">📋 Скопировать CSV</button>
+        <span id="copyStatus" class="copy-status"></span>
+    </div>
+</div>
+
+<script>
+    (function() {
+        // === DOM ===
+        const csvFileInput = document.getElementById('csvFile');
+        const playerListTextarea = document.getElementById('playerList');
+        const playerCountSpan = document.getElementById('playerCountNum');
+        const filterBtn = document.getElementById('filterBtn');
+        const totalDuoSpan = document.getElementById('totalDuo');
+        const filteredDuoSpan = document.getElementById('filteredDuo');
+        const tableContainer = document.getElementById('tableContainer');
+        const csvResult = document.getElementById('csvResult');
+        const copyBtn = document.getElementById('copyBtn');
+        const copyStatus = document.getElementById('copyStatus');
+        const loadPlayersBtn = document.getElementById('loadPlayersBtn');
+
+        // Данные
+        let duoData = [];          // массив объектов { squad, games, w, l, winrate, player1, player2 }
+        let playerSet = new Set(); // множество имён игроков (из списка)
+
+        // === Парсер CSV с поддержкой кавычек ===
+        function parseCSV(text) {
+            const lines = text.split(/\r?\n/).filter(line => line.trim() !== '');
+            if (lines.length === 0) return { headers: [], rows: [] };
+
+            // Определяем разделитель (запятая или точка с запятой)
+            const firstLine = lines[0];
+            const delimiter = firstLine.includes(',') ? ',' : ';';
+
+            function parseLine(line) {
+                const result = [];
+                let current = '';
+                let inQuotes = false;
+                for (let i = 0; i < line.length; i++) {
+                    const ch = line[i];
+                    if (inQuotes) {
+                        if (ch === '"' && (i+1 < line.length && line[i+1] === '"')) {
+                            current += '"';
+                            i++;
+                        } else if (ch === '"') {
+                            inQuotes = false;
+                        } else {
+                            current += ch;
+                        }
+                    } else {
+                        if (ch === '"') {
+                            inQuotes = true;
+                        } else if (ch === delimiter) {
+                            result.push(current.trim());
+                            current = '';
+                        } else {
+                            current += ch;
+                        }
+                    }
+                }
+                result.push(current.trim());
+                return result;
+            }
+
+            const headers = parseLine(lines[0]);
+            const rows = [];
+            for (let i = 1; i < lines.length; i++) {
+                const values = parseLine(lines[i]);
+                while (values.length < headers.length) values.push('');
+                const row = {};
+                headers.forEach((h, idx) => {
+                    row[h] = values[idx] || '';
+                });
+                rows.push(row);
+            }
+            return { headers, rows };
+        }
+
+        // === Загрузка CSV ===
+        function loadCSV(file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const text = e.target.result;
+                const parsed = parseCSV(text);
+                if (parsed.rows.length === 0) {
+                    alert('Не удалось распарсить CSV. Проверьте формат.');
+                    return;
+                }
+
+                // Ищем нужные столбцы
+                const headers = parsed.headers;
+                const squadIdx = headers.findIndex(h => h.includes('2-Player Squad') || h.includes('Squad'));
+                const gamesIdx = headers.findIndex(h => h.toLowerCase().includes('games'));
+                const wIdx = headers.findIndex(h => h === 'W' || h.toLowerCase().includes('wins'));
+                const lIdx = headers.findIndex(h => h === 'L' || h.toLowerCase().includes('losses'));
+                const winrateIdx = headers.findIndex(h => h.includes('Win %') || h.includes('Winrate'));
+
+                if (squadIdx === -1) {
+                    alert('Не найден столбец "2-Player Squad".');
+                    return;
+                }
+
+                duoData = parsed.rows.map(row => {
+                    const squad = row[headers[squadIdx]] || '';
+                    const games = row[headers[gamesIdx]] || '';
+                    const w = row[headers[wIdx]] || '';
+                    const l = row[headers[lIdx]] || '';
+                    const winrate = row[headers[winrateIdx]] || '';
+
+                    // Разбиваем squad на двух игроков (разделитель ", ")
+                    let p1 = '', p2 = '';
+                    if (squad) {
+                        const parts = squad.split(',').map(s => s.trim());
+                        if (parts.length >= 2) {
+                            p1 = parts[0];
+                            p2 = parts[1];
+                        }
+                    }
+
+                    return { squad, games, w, l, winrate, player1: p1, player2: p2 };
+                });
+
+                // Обновляем статистику
+                totalDuoSpan.textContent = duoData.length;
+                filteredDuoSpan.textContent = '0';
+                tableContainer.innerHTML = `<div class="no-data">Данные загружены. Нажмите "Отфильтровать".</div>`;
+                csvResult.value = '';
+                updateFilteredStats();
+            };
+            reader.readAsText(file);
+        }
+
+        // === Обновление количества игроков в списке ===
+        function updatePlayerCount() {
+            const text = playerListTextarea.value;
+            const names = text.split(/\n/).map(s => s.trim()).filter(s => s.length > 0);
+            playerSet = new Set(names);
+            playerCountSpan.textContent = playerSet.size;
+        }
+
+        // === Фильтрация ===
+        function filterDuo() {
+            if (duoData.length === 0) {
+                alert('Сначала загрузите CSV с дуо.');
+                return;
+            }
+            if (playerSet.size === 0) {
+                alert('Список игроков пуст. Заполните его.');
+                return;
+            }
+
+            const filtered = duoData.filter(row => {
+                return playerSet.has(row.player1) && playerSet.has(row.player2);
+            });
+
+            // Обновляем статистику
+            filteredDuoSpan.textContent = filtered.length;
+
+            // Отрисовываем таблицу
+            renderTable(filtered);
+
+            // Генерируем CSV
+            generateCSV(filtered);
+        }
+
+        // === Отрисовка таблицы ===
+        function renderTable(rows) {
+            if (rows.length === 0) {
+                tableContainer.innerHTML = `<div class="no-data">Нет дуо, удовлетворяющих фильтру</div>`;
+                return;
+            }
+
+            let html = `<table>
+                <thead>
+                    <tr>
+                        <th>2-Player Squad</th>
+                        <th>Games</th>
+                        <th>W</th>
+                        <th>L</th>
+                        <th>Win %</th>
+                    </tr>
+                </thead>
+                <tbody>`;
+            rows.forEach(row => {
+                html += `<tr>
+                    <td>${row.squad}</td>
+                    <td>${row.games}</td>
+                    <td>${row.w}</td>
+                    <td>${row.l}</td>
+                    <td>${row.winrate}</td>
+                </tr>`;
+            });
+            html += `</tbody></table>`;
+            tableContainer.innerHTML = html;
+        }
+
+        // === Генерация CSV ===
+        function generateCSV(rows) {
+            if (rows.length === 0) {
+                csvResult.value = '2-Player Squad,Games,W,L,Win %\n';
+                return;
+            }
+            const lines = ['2-Player Squad,Games,W,L,Win %'];
+            rows.forEach(row => {
+                // Экранируем кавычки в squad
+                let squad = row.squad;
+                if (squad.includes(',') || squad.includes('"')) {
+                    squad = `"${squad.replace(/"/g, '""')}"`;
+                }
+                lines.push(`${squad},${row.games},${row.w},${row.l},${row.winrate}`);
+            });
+            csvResult.value = lines.join('\n');
+        }
+
+        // === Обновление статистики на UI ===
+        function updateFilteredStats() {
+            // ничего не делаем, значения обновляются в filterDuo
+        }
+
+        // === Загрузка списка игроков из файла ratings.js ===
+        function loadRatingsJS(file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const text = e.target.value;
+                // Пытаемся извлечь имена игроков из объекта ratings
+                // Ищем все вхождения вида 'Имя': число
+                // Упрощённо: ищем строки вида 'Имя':  (с кавычками)
+                const regex = /['"]([^'"]+)['"]\s*:\s*\d+/g;
+                const matches = text.matchAll(regex);
+                const names = new Set();
+                for (const match of matches) {
+                    const name = match[1].trim();
+                    if (name && name.length > 1) {
+                        names.add(name);
+                    }
+                }
+                if (names.size === 0) {
+                    alert('Не удалось извлечь имена из ratings.js. Проверьте, что файл содержит записи вида "Имя": число.');
+                    return;
+                }
+                // Заполняем textarea
+                const sorted = Array.from(names).sort();
+                playerListTextarea.value = sorted.join('\n');
+                updatePlayerCount();
+                // Автоматически запускаем фильтрацию?
+                // Не будем автоматически, чтобы пользователь мог отредактировать список.
+                alert(`Извлечено ${sorted.length} имён. Нажмите "Отфильтровать" для применения.`);
+            };
+            reader.readAsText(file);
+        }
+
+        // === События ===
+
+        // Загрузка CSV
+        csvFileInput.addEventListener('change', function(e) {
+            const file = this.files[0];
+            if (file) {
+                loadCSV(file);
+            }
+        });
+
+        // Обновление счётчика игроков при вводе
+        playerListTextarea.addEventListener('input', updatePlayerCount);
+
+        // Кнопка "Загрузить из ratings.js"
+        loadPlayersBtn.addEventListener('click', function() {
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.accept = '.js,.txt';
+            input.onchange = function(e) {
+                const file = this.files[0];
+                if (file) {
+                    loadRatingsJS(file);
+                }
+                this.remove();
+            };
+            input.click();
+        });
+
+        // Кнопка фильтрации
+        filterBtn.addEventListener('click', filterDuo);
+
+        // Копирование CSV
+        copyBtn.addEventListener('click', function() {
+            const text = csvResult.value;
+            if (!text || text.trim() === '') {
+                copyStatus.textContent = 'Нет данных для копирования';
+                setTimeout(() => copyStatus.textContent = '', 2000);
+                return;
+            }
+            navigator.clipboard.writeText(text).then(() => {
+                copyStatus.textContent = '✅ Скопировано!';
+                setTimeout(() => copyStatus.textContent = '', 3000);
+            }).catch(() => {
+                const textarea = document.createElement('textarea');
+                textarea.value = text;
+                document.body.appendChild(textarea);
+                textarea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textarea);
+                copyStatus.textContent = '✅ Скопировано!';
+                setTimeout(() => copyStatus.textContent = '', 3000);
+            });
+        });
+
+        // Инициализация: обновляем счётчик при загрузке
+        updatePlayerCount();
+
+        // Также можно добавить автоматическую фильтрацию после загрузки CSV и списка игроков,
+        // но оставим на усмотрение пользователя.
+
+        // Если пользователь хочет автоматически после загрузки обоих - можно добавить,
+        // но в данном случае просто ждём нажатия кнопки.
+    })();
+</script>
+
+</body>
+</html>
