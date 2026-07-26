@@ -241,7 +241,7 @@ export class Tournament {
                         -(
                             power1 -
                             power2
-                        ) * 0.6
+                        ) * 0.4
                     )
                 );
 
