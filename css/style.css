@@ -4698,3 +4698,142 @@ tr:hover td {
     font-size: 1.1em;
     padding: 20px 0;
 }
+
+.player-form-minus-3 {
+    color: #ff2020 !important;
+}
+
+.player-form-minus-2 {
+    color: #ff4848 !important;
+}
+
+.player-form-minus-1 {
+    color: #ff8c69 !important;
+}
+
+.player-form-normal {
+    color: #ffffff !important;
+}
+
+.player-form-plus-1 {
+    color: #8cff9b !important;
+}
+
+.player-form-plus-2 {
+    color: #43e866 !important;
+}
+
+.player-form-plus-3 {
+    color: #00ff46 !important;
+}
+
+.player-form-value {
+    margin-left: 5px;
+    font-weight: 700;
+}
+
+#team-table-container table td {
+    text-align: left;
+}
+#team-table-container table td:last-child {
+    text-align: right;
+}
+
+
+/* ===== ТАБЛИЦА КОМАНД – СОСТАВ ===== */
+.team-players-cell {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 16px;
+}
+
+.player-cell {
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    background: rgba(255,255,255,0.03);
+    padding: 2px 8px;
+    border-radius: 4px;
+    border: 1px solid rgba(255,255,255,0.05);
+}
+
+.player-name {
+    font-weight: 500;
+    color: var(--color-text);
+}
+
+.player-rating-small {
+    font-size: 0.7rem;
+    color: var(--color-text-muted);
+    line-height: 1.2;
+}
+
+/* ===== ТАБЛИЦА КОМАНД – ШИРИНА ПО СОДЕРЖИМОМУ ===== */
+.team-table {
+    width: auto;
+    table-layout: auto;
+    border-collapse: collapse;
+    margin: 0 auto;
+}
+
+.team-table th,
+.team-table td {
+    padding: 8px 12px;
+    border-bottom: 1px solid var(--color-border);
+    white-space: nowrap;
+}
+
+.team-table th {
+    font-weight: 600;
+    color: var(--color-accent);
+    border-bottom: 2px solid var(--color-accent);
+}
+
+/* Левое выравнивание для названия команды и состава */
+.team-table td:nth-child(2),
+.team-table td:nth-child(3),
+.team-table th:nth-child(2),
+.team-table th:nth-child(3) {
+    text-align: left;
+}
+
+/* Рейтинг – правое выравнивание */
+.team-table td:nth-child(4),
+.team-table th:nth-child(4) {
+    text-align: right;
+}
+
+/* Номер – по центру */
+.team-table td:nth-child(1),
+.team-table th:nth-child(1) {
+    text-align: center;
+}
+
+/* Состав – игроки в ряд, компактно */
+.team-players-cell {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px 12px;
+}
+
+.player-cell {
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 2px 6px;
+    border-radius: 4px;
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.05);
+    white-space: nowrap;
+}
+
+.player-name {
+    font-weight: 500;
+    color: var(--color-text);
+}
+
+.player-rating-small {
+    font-size: 0.65rem;
+    color: var(--color-text-muted);
+    line-height: 1.2;
+}

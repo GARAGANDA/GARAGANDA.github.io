@@ -3,22 +3,247 @@
 // Быстрая симуляция матча при пропуске драфта
 // ============================================================
 
-export function simulateMatch(teamA, teamB, bestOf = 3) {
-    // Простая симуляция на основе среднего рейтинга игроков
-    // (рейтинги должны быть переданы в объектах команд, но для упрощения используем случайность)
-    // В реальном проекте лучше использовать getTeamRating из calculalations,
-    // но для этого нужно создать временное состояние с пиками.
-    // Для простоты — случайный победитель с небольшим перевесом в сторону более высокого среднего рейтинга.
-    const avgA = teamA.players.reduce((sum, p) => sum + (teamA.ratings?.[p] || 80), 0) / teamA.players.length;
-    const avgB = teamB.players.reduce((sum, p) => sum + (teamB.ratings?.[p] || 80), 0) / teamB.players.length;
-    const diff = avgA - avgB;
-    const winProb = 1 / (1 + Math.exp(-diff * 0.1));
-    const winsNeeded = Math.ceil(bestOf / 2);
-    let winsA = 0, winsB = 0;
-    while (winsA < winsNeeded && winsB < winsNeeded) {
-        if (Math.random() < winProb) winsA++;
-        else winsB++;
+
+// ============================================================
+// ФОРМА
+// ============================================================
+
+function getPlayerForm(
+    player,
+    playerForms = {}
+) {
+
+    const form =
+        Number(
+            playerForms?.[player]
+        );
+
+
+    if (
+        !Number.isFinite(
+            form
+        )
+    ) {
+        return 0;
     }
-    const winner = winsA > winsB ? teamA : teamB;
-    return { winner, score: [winsA, winsB] };
+
+
+    return Math.max(
+        -3,
+        Math.min(
+            3,
+            form
+        )
+    );
+}
+
+
+// ============================================================
+// РЕЙТИНГ ИГРОКА
+// ============================================================
+
+function getPlayerRating(
+    team,
+    player
+) {
+
+    if (
+        team?.ratings &&
+        team.ratings[player] !==
+        undefined
+    ) {
+
+        const rating =
+            Number(
+                team.ratings[player]
+            );
+
+
+        if (
+            Number.isFinite(
+                rating
+            )
+        ) {
+            return rating;
+        }
+    }
+
+
+    if (
+        team?.playerRatings &&
+        team.playerRatings[player] !==
+        undefined
+    ) {
+
+        const rating =
+            Number(
+                team.playerRatings[player]
+            );
+
+
+        if (
+            Number.isFinite(
+                rating
+            )
+        ) {
+            return rating;
+        }
+    }
+
+
+    return 80;
+}
+
+
+// ============================================================
+// СРЕДНИЙ РЕЙТИНГ КОМАНДЫ
+// ============================================================
+
+function getTeamAverageRating(
+    team
+) {
+
+    if (
+        !team ||
+        !Array.isArray(
+            team.players
+        ) ||
+        team.players.length === 0
+    ) {
+        return 80;
+    }
+
+
+    const playerForms =
+        team.playerForms ||
+        {};
+
+
+    let total =
+        0;
+
+
+    let count =
+        0;
+
+
+    for (
+        const player of team.players
+    ) {
+
+        const baseRating =
+            getPlayerRating(
+                team,
+                player
+            );
+
+
+        const form =
+            getPlayerForm(
+                player,
+                playerForms
+            );
+
+
+        total +=
+            baseRating +
+            form;
+
+
+        count++;
+    }
+
+
+    return count > 0
+        ? total / count
+        : 80;
+}
+
+
+// ============================================================
+// СИМУЛЯЦИЯ
+// ============================================================
+
+export function simulateMatch(
+    teamA,
+    teamB,
+    bestOf = 3
+) {
+
+    const avgA =
+        getTeamAverageRating(
+            teamA
+        );
+
+
+    const avgB =
+        getTeamAverageRating(
+            teamB
+        );
+
+
+    const diff =
+        avgA -
+        avgB;
+
+
+    const winProb =
+        1 /
+        (
+            1 +
+            Math.exp(
+                -diff *
+                0.1
+            )
+        );
+
+
+    const winsNeeded =
+        Math.ceil(
+            bestOf / 2
+        );
+
+
+    let winsA =
+        0;
+
+
+    let winsB =
+        0;
+
+
+    while (
+        winsA < winsNeeded &&
+        winsB < winsNeeded
+    ) {
+
+        if (
+            Math.random() <
+            winProb
+        ) {
+
+            winsA++;
+
+        } else {
+
+            winsB++;
+        }
+    }
+
+
+    const winner =
+        winsA > winsB
+            ? teamA
+            : teamB;
+
+
+    return {
+
+        winner,
+
+        score: [
+            winsA,
+            winsB
+        ]
+    };
 }

@@ -1294,7 +1294,8 @@ export async function runFullTournament(
     coreStats,
     supportStats,
     duoMap,
-    allRatings
+    allRatings,
+    playerForms  
 ) {
 
     if (
@@ -1333,7 +1334,8 @@ export async function runFullTournament(
             generatedTeams,
             coreStats,
             supportStats,
-            duoMap
+            duoMap,
+            playerForms  
         );
 
 

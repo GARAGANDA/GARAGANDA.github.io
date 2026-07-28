@@ -1,51 +1,719 @@
 // ============================================================
 // js/core/matchSimulation.js
 // ============================================================
+//
+// Симуляция силы команды.
+//
+// Структура проекта:
+//
+// js/
+// ├── ratings.js
+// ├── synergyCalculator.js
+// └── core/
+//     └── matchSimulation.js
+//
+// Поэтому из папки js/core/ нужно подниматься на уровень выше:
+//
+// ../synergyCalculator.js
+// ../ratings.js
+//
+// ============================================================
 
-import { calculateSynergyBonus } from '../synergyCalculator.js';
-import { getRating } from '../ratings.js';
+import {
+    calculateSynergyBonus
+} from '../synergyCalculator.js';
 
-export function getSynergyBonus(teamPlayers, duoMap) {
-    // Приводим teamPlayers к массиву
-    let playersArray;
-    if (Array.isArray(teamPlayers)) {
-        playersArray = teamPlayers;
-    } else if (teamPlayers && typeof teamPlayers === 'object') {
-        // Если это объект {carry: ..., mid: ..., ...}, берём значения в порядке ролей
-        const order = ['carry', 'mid', 'offlane', 'semi', 'full'];
-        playersArray = order.map(role => teamPlayers[role]).filter(p => p);
-    } else {
+import {
+    getRating
+} from '../ratings.js';
+
+
+// ============================================================
+// ПОЛУЧЕНИЕ ФОРМЫ ИГРОКА
+// ============================================================
+//
+// Форма:
+//
+// -3 — плохая форма
+// -2 — плохая форма
+// -1 — немного хуже нормы
+//  0 — обычная форма
+// +1 — немного лучше нормы
+// +2 — хорошая форма
+// +3 — отличная форма
+//
+// Форма передаётся отдельно от базового рейтинга.
+//
+// Например:
+//
+// базовый рейтинг = 100
+// форма = +3
+//
+// итог = 103
+//
+// ============================================================
+
+export function getPlayerForm(
+    player,
+    playerForms = {}
+) {
+
+    const form =
+        Number(
+            playerForms?.[player]
+        );
+
+
+    // --------------------------------------------------------
+    // Если форма отсутствует
+    // --------------------------------------------------------
+
+    if (
+        !Number.isFinite(
+            form
+        )
+    ) {
         return 0;
     }
-    const result = calculateSynergyBonus(playersArray, duoMap);
-    return result.totalBonus;
+
+
+    // --------------------------------------------------------
+    // Защита диапазона
+    // --------------------------------------------------------
+
+    return Math.max(
+        -3,
+        Math.min(
+            3,
+            form
+        )
+    );
 }
 
-export function getTeamPower(teamPlayers, roleKeys, ratings, duoMap) {
-    // Приводим teamPlayers к массиву
+
+// ============================================================
+// ПОЛУЧЕНИЕ БОНУСА СИНЕРГИИ
+// ============================================================
+
+export function getSynergyBonus(
+    teamPlayers,
+    duoMap
+) {
+
     let playersArray;
-    if (Array.isArray(teamPlayers)) {
-        playersArray = teamPlayers;
-    } else if (teamPlayers && typeof teamPlayers === 'object') {
-        const order = ['carry', 'mid', 'offlane', 'semi', 'full'];
-        playersArray = order.map(role => teamPlayers[role]).filter(p => p);
-    } else {
-        return 0;
+
+
+    // --------------------------------------------------------
+    // Если уже передан массив
+    // --------------------------------------------------------
+
+    if (
+        Array.isArray(
+            teamPlayers
+        )
+    ) {
+
+        playersArray =
+            teamPlayers;
+
     }
 
-    // Приводим roleKeys к массиву (если передан объект, берём значения)
-    let keys = Array.isArray(roleKeys) ? roleKeys : ['carry', 'mid', 'offlane', 'semi-support', 'full-support'];
 
-    let totalRating = 0;
-    playersArray.forEach((player, idx) => {
-        const roleKey = keys[idx] || keys[0];
-        const rating = getRating(player, roleKey);
-        totalRating += rating || 0;
-    });
-    const avgRating = totalRating / playersArray.length;
+    // --------------------------------------------------------
+    // Если передан объект игроков
+    // --------------------------------------------------------
 
-    // Бонус синергии
-    const synergy = getSynergyBonus(playersArray, duoMap);
+    else if (
+        teamPlayers &&
+        typeof teamPlayers ===
+        'object'
+    ) {
 
-    return avgRating + synergy;
+        const order = [
+
+            'carry',
+
+            'mid',
+
+            'offlane',
+
+            'semi',
+
+            'full'
+
+        ];
+
+
+        playersArray =
+            order
+                .map(
+                    role =>
+                        teamPlayers[role]
+                )
+                .filter(
+                    player =>
+                        player
+                );
+
+    }
+
+
+    // --------------------------------------------------------
+    // Неверные данные
+    // --------------------------------------------------------
+
+    else {
+
+        return 0;
+
+    }
+
+
+    // --------------------------------------------------------
+    // Для синергии нужно минимум 2 игрока
+    // --------------------------------------------------------
+
+    if (
+        playersArray.length <
+        2
+    ) {
+
+        return 0;
+
+    }
+
+
+    // --------------------------------------------------------
+    // Расчёт синергии
+    // --------------------------------------------------------
+
+    const result =
+        calculateSynergyBonus(
+            playersArray,
+            duoMap
+        );
+
+
+    // --------------------------------------------------------
+    // Поддержка текущего формата
+    // calculateSynergyBonus возвращает объект
+    // с totalBonus
+    // --------------------------------------------------------
+
+    if (
+        result &&
+        typeof result ===
+        'object'
+    ) {
+
+        return (
+            Number(
+                result.totalBonus
+            ) || 0
+        );
+
+    }
+
+
+    // --------------------------------------------------------
+    // Если функция вернула число
+    // --------------------------------------------------------
+
+    return (
+        Number(
+            result
+        ) || 0
+    );
+}
+
+
+// ============================================================
+// ПОЛУЧЕНИЕ БАЗОВОГО РЕЙТИНГА ИГРОКА
+// ============================================================
+
+function getBasePlayerRating(
+    player,
+    roleKey,
+    ratings
+) {
+
+    // --------------------------------------------------------
+    // Если ratings передан как объект
+    // --------------------------------------------------------
+
+    if (
+        ratings &&
+        typeof ratings ===
+        'object' &&
+        ratings[player] !==
+        undefined
+    ) {
+
+        const rating =
+            Number(
+                ratings[player]
+            );
+
+
+        if (
+            Number.isFinite(
+                rating
+            )
+        ) {
+
+            return rating;
+
+        }
+
+    }
+
+
+    // --------------------------------------------------------
+    // Получаем рейтинг из ratings.js
+    // --------------------------------------------------------
+
+    const rating =
+        Number(
+            getRating(
+                player,
+                roleKey
+            )
+        );
+
+
+    // --------------------------------------------------------
+    // Если рейтинг найден
+    // --------------------------------------------------------
+
+    if (
+        Number.isFinite(
+            rating
+        )
+    ) {
+
+        return rating;
+
+    }
+
+
+    // --------------------------------------------------------
+    // Запасное значение
+    // --------------------------------------------------------
+
+    return 80;
+}
+
+
+// ============================================================
+// ПОЛУЧЕНИЕ МАССИВА ИГРОКОВ
+// ============================================================
+
+function getPlayersArray(
+    teamPlayers
+) {
+
+    // --------------------------------------------------------
+    // Уже массив
+    // --------------------------------------------------------
+
+    if (
+        Array.isArray(
+            teamPlayers
+        )
+    ) {
+
+        return teamPlayers
+            .filter(
+                player =>
+                    player
+            );
+
+    }
+
+
+    // --------------------------------------------------------
+    // Объект по ролям
+    // --------------------------------------------------------
+
+    if (
+        teamPlayers &&
+        typeof teamPlayers ===
+        'object'
+    ) {
+
+        const order = [
+
+            'carry',
+
+            'mid',
+
+            'offlane',
+
+            'semi',
+
+            'full'
+
+        ];
+
+
+        return order
+            .map(
+                role =>
+                    teamPlayers[role]
+            )
+            .filter(
+                player =>
+                    player
+            );
+
+    }
+
+
+    return [];
+}
+
+
+// ============================================================
+// РАСЧЁТ СИЛЫ КОМАНДЫ
+// ============================================================
+//
+// Формула:
+//
+// Средний рейтинг игроков
+// +
+// средняя/итоговая синергия
+//
+// При этом каждому игроку добавляется его форма:
+//
+// базовый рейтинг + форма
+//
+// Например:
+//
+// Player A = 100 + 3 = 103
+// Player B = 95  - 2 = 93
+//
+// ============================================================
+
+export function getTeamPower(
+    teamPlayers,
+    roleKeys,
+    ratings,
+    duoMap,
+    playerForms = {}
+) {
+
+    // --------------------------------------------------------
+    // Получаем игроков
+    // --------------------------------------------------------
+
+    const playersArray =
+        getPlayersArray(
+            teamPlayers
+        );
+
+
+    // --------------------------------------------------------
+    // Нет игроков
+    // --------------------------------------------------------
+
+    if (
+        playersArray.length ===
+        0
+    ) {
+
+        return 0;
+
+    }
+
+
+    // --------------------------------------------------------
+    // Роли по умолчанию
+    // --------------------------------------------------------
+
+    const keys =
+        Array.isArray(
+            roleKeys
+        )
+            ? roleKeys
+            : [
+
+                'carry',
+
+                'mid',
+
+                'offlane',
+
+                'semi-support',
+
+                'full-support'
+
+            ];
+
+
+    // --------------------------------------------------------
+    // Общий рейтинг
+    // --------------------------------------------------------
+
+    let totalRating =
+        0;
+
+
+    // ========================================================
+    // ПРОХОД ПО ИГРОКАМ
+    // ========================================================
+
+    playersArray.forEach(
+        (
+            player,
+            index
+        ) => {
+
+            // ------------------------------------------------
+            // Роль игрока
+            // ------------------------------------------------
+
+            const roleKey =
+                keys[index] ||
+                keys[0];
+
+
+            // ------------------------------------------------
+            // Базовый рейтинг
+            // ------------------------------------------------
+
+            const baseRating =
+                getBasePlayerRating(
+                    player,
+                    roleKey,
+                    ratings
+                );
+
+
+            // ------------------------------------------------
+            // Форма
+            // ------------------------------------------------
+
+            const form =
+                getPlayerForm(
+                    player,
+                    playerForms
+                );
+
+
+            // ------------------------------------------------
+            // Итоговый рейтинг игрока
+            // ------------------------------------------------
+
+            const effectiveRating =
+                baseRating +
+                form;
+
+
+            // ------------------------------------------------
+            // Добавляем к общей силе
+            // ------------------------------------------------
+
+            totalRating +=
+                effectiveRating;
+
+        }
+    );
+
+
+    // ========================================================
+    // СРЕДНИЙ РЕЙТИНГ
+    // ========================================================
+
+    const avgRating =
+        totalRating /
+        playersArray.length;
+
+
+    // ========================================================
+    // СИНЕРГИЯ
+    // ========================================================
+
+    const synergy =
+        getSynergyBonus(
+            playersArray,
+            duoMap
+        );
+
+
+    // ========================================================
+    // ИТОГОВАЯ СИЛА
+    // ========================================================
+
+    return (
+        avgRating +
+        synergy
+    );
+}
+
+
+// ============================================================
+// РАСЧЁТ СИЛЫ КОМАНДЫ С ПОДРОБНОЙ ИНФОРМАЦИЕЙ
+// ============================================================
+//
+// Эта функция необязательна для основной симуляции,
+// но полезна для отладки.
+//
+// Возвращает:
+//
+// {
+//     players: [...],
+//     baseRating: ...,
+//     formBonus: ...,
+//     effectiveRating: ...,
+//     synergy: ...,
+//     totalPower: ...
+// }
+//
+// ============================================================
+
+export function getTeamPowerDetails(
+    teamPlayers,
+    roleKeys,
+    ratings,
+    duoMap,
+    playerForms = {}
+) {
+
+    const playersArray =
+        getPlayersArray(
+            teamPlayers
+        );
+
+
+    if (
+        playersArray.length ===
+        0
+    ) {
+
+        return {
+
+            players: [],
+
+            baseRating: 0,
+
+            formBonus: 0,
+
+            effectiveRating: 0,
+
+            synergy: 0,
+
+            totalPower: 0
+
+        };
+
+    }
+
+
+    const keys =
+        Array.isArray(
+            roleKeys
+        )
+            ? roleKeys
+            : [
+
+                'carry',
+
+                'mid',
+
+                'offlane',
+
+                'semi-support',
+
+                'full-support'
+
+            ];
+
+
+    let baseRatingTotal =
+        0;
+
+
+    let formTotal =
+        0;
+
+
+    playersArray.forEach(
+        (
+            player,
+            index
+        ) => {
+
+            const roleKey =
+                keys[index] ||
+                keys[0];
+
+
+            const baseRating =
+                getBasePlayerRating(
+                    player,
+                    roleKey,
+                    ratings
+                );
+
+
+            const form =
+                getPlayerForm(
+                    player,
+                    playerForms
+                );
+
+
+            baseRatingTotal +=
+                baseRating;
+
+
+            formTotal +=
+                form;
+
+        }
+    );
+
+
+    const averageBaseRating =
+        baseRatingTotal /
+        playersArray.length;
+
+
+    const averageForm =
+        formTotal /
+        playersArray.length;
+
+
+    const effectiveRating =
+        averageBaseRating +
+        averageForm;
+
+
+    const synergy =
+        getSynergyBonus(
+            playersArray,
+            duoMap
+        );
+
+
+    return {
+
+        players:
+            playersArray,
+
+        baseRating:
+            averageBaseRating,
+
+        formBonus:
+            averageForm,
+
+        effectiveRating,
+
+        synergy,
+
+        totalPower:
+            effectiveRating +
+            synergy
+
+    };
 }

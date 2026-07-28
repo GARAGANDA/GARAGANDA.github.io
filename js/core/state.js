@@ -5,6 +5,7 @@ export const state = {
     heroStats: {},
     allRatings: {},
     realTeams: {},
+    playerForms: {},
     generatedTeams: null,
     pentagonInstance: null,
     // флаги и настройки

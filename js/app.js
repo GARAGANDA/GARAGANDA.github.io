@@ -9,13 +9,31 @@ import { generateSynergyTeams } from './core/teamGenerator.js';
 import { runFullTournament } from './core/tournamentController.js';
 import { displayTeamTable } from './ui/teamTable.js';
 import { state } from './core/state.js';
-import { STEP_ORDER } from './roleData.js';
+import { STEP_ORDER, rolePlayers } from './roleData.js';
 import { duoMap } from './synergyData.js';
 import { ratings } from './ratings.js';
 // Импорты данных драфта – теперь из папки draft/data/
 import { loadHeroStats, loadHeroRatings } from './draft/data/heroData.js';
 
 let pentagonInstance = null;
+
+// ============================================================
+// ГЕНЕРАЦИЯ ФОРМЫ ДЛЯ ВСЕХ ИГРОКОВ
+// ============================================================
+
+function generatePlayerFormsForAllPlayers() {
+    const allPlayers = new Set();
+    for (const role in rolePlayers) {
+        for (const player of rolePlayers[role]) {
+            allPlayers.add(player);
+        }
+    }
+    const forms = {};
+    for (const player of allPlayers) {
+        forms[player] = Math.floor(Math.random() * 7) - 3;
+    }
+    return forms;
+}
 
 // ============================================================
 // ЗАПУСК ТУРНИРА (ГЕНЕРАЦИЯ КОМАНД)
@@ -47,15 +65,20 @@ function startTournament(selectedPlayers, randomOnly = false) {
         duoMap,
         15,
         teamsData,
-        Object.keys(state.realTeams)
+        Object.keys(state.realTeams),
+        state.playerForms
     );
 
     state.generatedTeams = allTeams;
     displayTeamTable(allTeams);
+
+    // Скрываем пентагон, показываем таблицу команд
+    document.getElementById('main-interface').style.display = 'none';
+    document.getElementById('team-table-container').style.display = 'block';
 }
 
 // ============================================================
-// СБРОС ТУРНИРА
+// СБРОС ТУРНИРА (очистка всех данных)
 // ============================================================
 function resetTournament() {
     const containers = [
@@ -75,11 +98,6 @@ function resetTournament() {
         }
     });
 
-    const startScreen = document.getElementById('start-screen');
-    const mainInterface = document.getElementById('main-interface');
-    if (startScreen) startScreen.style.display = 'block';
-    if (mainInterface) mainInterface.style.display = 'none';
-
     const clearElements = [
         'tournament-status',
         'history-matches',
@@ -95,28 +113,46 @@ function resetTournament() {
         if (el) el.innerHTML = '';
     });
 
+    // Сбрасываем глобальное состояние
     state.generatedTeams = null;
+    state.games = []; // если есть
+    state.direWins = 0;
+    state.radiantWins = 0;
+    state.winner = null;
+    state.isFinished = false;
+
     console.log('Турнир сброшен');
 }
 
 // ============================================================
-// РЕСТАРТ ДРАФТА (перезапуск выбора игроков)
+// ПЕРЕЗАПУСК (рестарт) – показывает начальный экран
 // ============================================================
 function restartDraft() {
-    // Сброс турнира (очистка всех этапов)
+    // 1. Очищаем все турнирные данные
     resetTournament();
 
-    // Перезапуск выбора игроков в пентагоне
+    // 2. Сбрасываем пентагон (чтобы при следующем запуске выбор был чистым)
     if (pentagonInstance) {
         pentagonInstance.initSelection();
     }
 
-    // Показать основной интерфейс, скрыть стартовый экран
+    // 3. Показываем стартовый экран, скрываем основной интерфейс
     document.getElementById('start-screen').style.display = 'none';
     document.getElementById('main-interface').style.display = 'block';
 
-    // Кнопка "Запустить турнир" будет заблокирована (initSelection блокирует её)
-    console.log('Драфт перезапущен');
+    // 4. Дополнительно очищаем поля выбора игроков (на всякий случай)
+    const cardsContainer = document.getElementById('cards-container');
+    if (cardsContainer) cardsContainer.innerHTML = '';
+    const statusText = document.getElementById('status-text');
+    if (statusText) statusText.textContent = 'Выберите игрока на позицию Carry';
+    const stepTitle = document.getElementById('step-title');
+    if (stepTitle) stepTitle.innerHTML = 'Выберите <span id="role-name">Carry</span>';
+    const startBtn = document.getElementById('start-tournament-btn');
+    if (startBtn) startBtn.disabled = true;
+    const btnRandom = document.getElementById('btn-random-teams');
+    if (btnRandom) btnRandom.disabled = true;
+
+    console.log('Перезапуск выполнен, показан начальный экран');
 }
 
 // ============================================================
@@ -131,7 +167,6 @@ async function init() {
         state.realTeams = stats.realTeams || {};
         state.allRatings = ratings;
 
-        // Загружаем данные для драфта (герои, игроки, винрейты, KAL)
         try {
             const heroStats = await loadHeroStats();
             const heroRatings = await loadHeroRatings();
@@ -143,6 +178,9 @@ async function init() {
             window._heroStats = {};
             window._heroRatings = {};
         }
+
+        state.playerForms = generatePlayerFormsForAllPlayers();
+        console.log('Сгенерированы формы игроков:', state.playerForms);
 
         document.getElementById('loading').style.display = 'none';
         document.getElementById('start-screen').style.display = 'block';
@@ -158,7 +196,7 @@ async function init() {
                 const btnRandom = document.getElementById('btn-random-teams');
                 if (btnRandom) btnRandom.disabled = false;
             },
-            restartDraft  // ← теперь рестарт перезапускает драфт, а не уходит на главную
+            restartDraft
         );
         state.pentagonInstance = pentagonInstance;
 
@@ -193,7 +231,8 @@ async function init() {
                     state.coreStats,
                     state.supportStats,
                     duoMap,
-                    state.allRatings
+                    state.allRatings,
+                    state.playerForms
                 );
             });
         }

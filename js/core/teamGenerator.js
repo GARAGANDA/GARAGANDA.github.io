@@ -1,20 +1,24 @@
 import { getFilteredPlayers, STEP_ORDER } from '../roleData.js';
 import { calculateSynergyBonus, findInMap } from '../synergyCalculator.js';
 
-function getPlayerRating(player, roleKey, ratings) {
-    if (ratings[roleKey] && ratings[roleKey][player] !== undefined) {
-        return ratings[roleKey][player];
-    }
-    return 0;
+// Вспомогательная функция для получения эффективного рейтинга с учётом формы
+function getEffectivePlayerRating(player, roleKey, ratings, playerForms = {}) {
+    const baseRating = ratings[roleKey]?.[player] ?? 0;
+    const form = Number(playerForms?.[player] ?? 0);
+    return baseRating + form;
 }
 
-function createUserTeam(userPlayers, userRoleKeys, ratings, duoMap) {
+function getPlayerRating(player, roleKey, ratings) {
+    return ratings[roleKey]?.[player] ?? 0;
+}
+
+function createUserTeam(userPlayers, userRoleKeys, ratings, duoMap, playerForms = {}) {
     const userSynergyResult = calculateSynergyBonus(userPlayers, duoMap);
     const userSynergy = userSynergyResult.totalBonus;
     let userAvgRating = 0;
     userPlayers.forEach((p, idx) => {
         const role = userRoleKeys[idx];
-        const rating = getPlayerRating(p, role, ratings);
+        const rating = getEffectivePlayerRating(p, role, ratings, playerForms);
         userAvgRating += rating;
     });
     userAvgRating /= 5;
@@ -38,7 +42,7 @@ function createUserTeam(userPlayers, userRoleKeys, ratings, duoMap) {
     };
 }
 
-function generateSingleRandomTeam(rolePools, ratings, duoMap, usedNames, usedPlayers, realTeamNames) {
+function generateSingleRandomTeam(rolePools, ratings, duoMap, usedNames, usedPlayers, realTeamNames, playerForms = {}) {
     const roleKeys = ['carry', 'mid', 'offlane', 'semi-support', 'full-support'];
     const teamPlayers = [];
     const teamRoleKeys = [];
@@ -56,7 +60,7 @@ function generateSingleRandomTeam(rolePools, ratings, duoMap, usedNames, usedPla
                 const duoData = findInMap(duoMap, [existing, cand]);
                 if (duoData) synergyScore += (duoData.winrate - 0.5) * 2;
             }
-            const rating = getPlayerRating(cand, role, ratings);
+            const rating = getEffectivePlayerRating(cand, role, ratings, playerForms);
             synergyScore += rating / 100;
             if (synergyScore > bestScore) {
                 bestScore = synergyScore;
@@ -72,7 +76,7 @@ function generateSingleRandomTeam(rolePools, ratings, duoMap, usedNames, usedPla
     let avgRating = 0;
     teamPlayers.forEach((p, idx) => {
         const role = teamRoleKeys[idx];
-        const rating = getPlayerRating(p, role, ratings);
+        const rating = getEffectivePlayerRating(p, role, ratings, playerForms);
         avgRating += rating;
     });
     avgRating /= 5;
@@ -80,6 +84,7 @@ function generateSingleRandomTeam(rolePools, ratings, duoMap, usedNames, usedPla
     const bonus = synergyResult.totalBonus;
     const totalRating = avgRating + bonus;
 
+    // ... (генерация имени остаётся без изменений)
     let name;
     if (Array.isArray(realTeamNames) && realTeamNames.length > 0) {
         name = realTeamNames.shift();
@@ -119,7 +124,7 @@ function generateSingleRandomTeam(rolePools, ratings, duoMap, usedNames, usedPla
     };
 }
 
-function generateTeamFromReal(realTeam, rolePools, ratings, duoMap, usedNames, usedPlayers, realTeamNames) {
+function generateTeamFromReal(realTeam, rolePools, ratings, duoMap, usedNames, usedPlayers, realTeamNames, playerForms = {}) {
     const roleKeys = ['carry', 'mid', 'offlane', 'semi-support', 'full-support'];
     const teamPlayers = [];
     const teamRoleKeys = [];
@@ -146,7 +151,7 @@ function generateTeamFromReal(realTeam, rolePools, ratings, duoMap, usedNames, u
                     const duoData = findInMap(duoMap, [existing, cand]);
                     if (duoData) synergyScore += (duoData.winrate - 0.5) * 2;
                 }
-                const rating = getPlayerRating(cand, role, ratings);
+                const rating = getEffectivePlayerRating(cand, role, ratings, playerForms);
                 synergyScore += rating / 100;
                 if (synergyScore > bestScore) {
                     bestScore = synergyScore;
@@ -164,6 +169,7 @@ function generateTeamFromReal(realTeam, rolePools, ratings, duoMap, usedNames, u
         usedPlayers.add(selectedPlayer);
     }
 
+    // ... (логика имени остаётся без изменений)
     let matchCount = 0;
     for (let i = 0; i < teamPlayers.length; i++) {
         if (teamPlayers[i] === originalPlayers[i]?.trim()) {
@@ -235,7 +241,7 @@ function generateTeamFromReal(realTeam, rolePools, ratings, duoMap, usedNames, u
     let avgRating = 0;
     teamPlayers.forEach((p, idx) => {
         const role = teamRoleKeys[idx];
-        const rating = getPlayerRating(p, role, ratings);
+        const rating = getEffectivePlayerRating(p, role, ratings, playerForms);
         avgRating += rating;
     });
     avgRating /= 5;
@@ -268,7 +274,8 @@ export function generateSynergyTeams(
     duoMap,
     numTeams = 15,
     realTeams = {},
-    realTeamNames = null
+    realTeamNames = null,
+    playerForms = {}
 ) {
     const roleKeys = ['carry', 'mid', 'offlane', 'semi-support', 'full-support'];
     const userSet = new Set(userPlayers);
@@ -278,8 +285,8 @@ export function generateSynergyTeams(
         const allPlayers = getFilteredPlayers(role);
         rolePools[role] = allPlayers.filter(p => !userSet.has(p));
         rolePools[role].sort((a, b) => {
-            const ra = getPlayerRating(a, role, ratings);
-            const rb = getPlayerRating(b, role, ratings);
+            const ra = getEffectivePlayerRating(a, role, ratings, playerForms);
+            const rb = getEffectivePlayerRating(b, role, ratings, playerForms);
             return rb - ra;
         });
     });
@@ -290,7 +297,7 @@ export function generateSynergyTeams(
     let availableNames = Array.isArray(realTeamNames) ? [...realTeamNames] : Object.keys(realTeams);
     availableNames = availableNames.sort(() => Math.random() - 0.5);
 
-    const userTeam = createUserTeam(userPlayers, userRoleKeys, ratings, duoMap);
+    const userTeam = createUserTeam(userPlayers, userRoleKeys, ratings, duoMap, playerForms);
 
     const generatedTeams = [];
 
@@ -304,7 +311,7 @@ export function generateSynergyTeams(
 
         for (let i = 0; i < teamsToGenerate; i++) {
             const realTeam = shuffledReal[i];
-            const team = generateTeamFromReal(realTeam, rolePools, ratings, duoMap, usedNames, usedPlayers, availableNames);
+            const team = generateTeamFromReal(realTeam, rolePools, ratings, duoMap, usedNames, usedPlayers, availableNames, playerForms);
             if (team) {
                 generatedTeams.push(team);
             }
@@ -312,7 +319,7 @@ export function generateSynergyTeams(
     }
 
     while (generatedTeams.length < numTeams) {
-        const randomTeam = generateSingleRandomTeam(rolePools, ratings, duoMap, usedNames, usedPlayers, availableNames);
+        const randomTeam = generateSingleRandomTeam(rolePools, ratings, duoMap, usedNames, usedPlayers, availableNames, playerForms);
         if (randomTeam) {
             generatedTeams.push(randomTeam);
         } else {
